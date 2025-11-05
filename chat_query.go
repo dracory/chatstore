@@ -5,13 +5,13 @@ import (
 	"strings"
 
 	"github.com/doug-martin/goqu/v9"
+	"github.com/dracory/sb"
 	"github.com/dromara/carbon/v2"
-	"github.com/gouniverse/sb"
 )
 
 // chatQuery implements the ChatQueryInterface
 type chatQuery struct {
-	params map[string]interface{}
+	params map[string]any
 }
 
 var _ ChatQueryInterface = (*chatQuery)(nil)
@@ -19,7 +19,7 @@ var _ ChatQueryInterface = (*chatQuery)(nil)
 // ChatQuery creates a new chat query
 func ChatQuery() ChatQueryInterface {
 	return &chatQuery{
-		params: map[string]interface{}{},
+		params: map[string]any{},
 	}
 }
 

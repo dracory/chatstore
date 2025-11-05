@@ -3,8 +3,8 @@ package chatstore
 import (
 	"testing"
 
-	"github.com/gouniverse/sb"
-	_ "modernc.org/sqlite"
+	"github.com/dracory/sb"
+	// _ "modernc.org/sqlite"
 )
 
 func TestStore_MessageCount(t *testing.T) {

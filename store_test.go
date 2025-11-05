@@ -5,7 +5,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/gouniverse/utils"
+	_ "github.com/glebarez/sqlite"
 )
 
 const testChat_O1 = "00000000000000000000000000000010"
@@ -16,7 +16,7 @@ const testUser_O1 = "00000000000000000000000000000030"
 const testUser_O2 = "00000000000000000000000000000040"
 
 func initDB(filepath string) *sql.DB {
-	if filepath != ":memory:" && utils.FileExists(filepath) {
+	if filepath != ":memory:" && fileExists(filepath) {
 		err := os.Remove(filepath) // remove database
 
 		if err != nil {

@@ -1,7 +1,7 @@
 package chatstore
 
 import (
-	"github.com/gouniverse/sb"
+	"github.com/dracory/sb"
 )
 
 // sqlChatTableCreate returns a SQL string for creating the chat table
