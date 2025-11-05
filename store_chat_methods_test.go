@@ -1,8 +1,9 @@
-package chatstore
+package chatstore_test
 
 import (
 	"testing"
 
+	"github.com/dracory/chatstore"
 	"github.com/dracory/sb"
 	// _ "modernc.org/sqlite"
 )
@@ -15,17 +16,17 @@ func TestStore_ChatCount(t *testing.T) {
 	}
 
 	// Create multiple chats
-	chat1 := NewChat().
+	chat1 := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
-	chat2 := NewChat().
+	chat2 := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_INACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_INACTIVE)
 
-	chat3 := NewChat().
+	chat3 := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_INACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_INACTIVE)
 
 	err = store.ChatCreate(chat1)
 	if err != nil {
@@ -43,7 +44,7 @@ func TestStore_ChatCount(t *testing.T) {
 	}
 
 	// Test counting all chats
-	allCount, err := store.ChatCount(ChatQuery())
+	allCount, err := store.ChatCount(chatstore.ChatQuery())
 	if err != nil {
 		t.Fatal("unexpected error counting all chats:", err)
 	}
@@ -53,7 +54,7 @@ func TestStore_ChatCount(t *testing.T) {
 	}
 
 	// Test counting by monitor ID
-	chatCount, err := store.ChatCount(ChatQuery().SetOwnerID(testUser_O1))
+	chatCount, err := store.ChatCount(chatstore.ChatQuery().SetOwnerID(testUser_O1))
 	if err != nil {
 		t.Fatal("unexpected error counting monitor chats:", err)
 	}
@@ -63,7 +64,7 @@ func TestStore_ChatCount(t *testing.T) {
 	}
 
 	// Test counting by status
-	activeCount, err := store.ChatCount(ChatQuery().SetStatus(CHAT_STATUS_ACTIVE))
+	activeCount, err := store.ChatCount(chatstore.ChatQuery().SetStatus(chatstore.CHAT_STATUS_ACTIVE))
 	if err != nil {
 		t.Fatal("unexpected error counting active chats:", err)
 	}
@@ -84,9 +85,9 @@ func TestStore_ChatCreate(t *testing.T) {
 		t.Fatal("unexpected nil store")
 	}
 
-	chat := NewChat().
+	chat := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
 	err = store.ChatCreate(chat)
 
@@ -102,9 +103,9 @@ func TestStore_ChatCreateDuplicate(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	chat := NewChat().
+	chat := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
 	err = store.ChatCreate(chat)
 	if err != nil {
@@ -125,9 +126,9 @@ func TestStore_ChatFindByID(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	chat := NewChat().
+	chat := chatstore.NewChat().
 		SetOwnerID(testChat_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
 	err = chat.SetMetas(map[string]string{
 		"severity":         "high",
@@ -162,7 +163,7 @@ func TestStore_ChatFindByID(t *testing.T) {
 		t.Fatal("Statuses do not match")
 	}
 
-	if chatFound.Status() != CHAT_STATUS_ACTIVE {
+	if chatFound.Status() != chatstore.CHAT_STATUS_ACTIVE {
 		t.Fatal("Statuses do not match")
 	}
 
@@ -251,9 +252,9 @@ func TestStore_ChatDelete(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	chat := NewChat().
+	chat := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
 	err = store.ChatCreate(chat)
 	if err != nil {
@@ -284,9 +285,9 @@ func TestStore_ChatDeleteByID(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	chat := NewChat().
+	chat := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
 	err = store.ChatCreate(chat)
 	if err != nil {
@@ -318,13 +319,13 @@ func TestStore_ChatList(t *testing.T) {
 	}
 
 	// Create multiple chats
-	chat1 := NewChat().
+	chat1 := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
-	chat2 := NewChat().
+	chat2 := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_INACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_INACTIVE)
 
 	err = store.ChatCreate(chat1)
 	if err != nil {
@@ -337,7 +338,7 @@ func TestStore_ChatList(t *testing.T) {
 	}
 
 	// Test listing all chats
-	allChats, err := store.ChatList(ChatQuery())
+	allChats, err := store.ChatList(chatstore.ChatQuery())
 	if err != nil {
 		t.Fatal("unexpected error listing all chats:", err)
 	}
@@ -347,7 +348,7 @@ func TestStore_ChatList(t *testing.T) {
 	}
 
 	// Test filtering by owner ID
-	ownerChats, err := store.ChatList(ChatQuery().SetOwnerID(testUser_O1))
+	ownerChats, err := store.ChatList(chatstore.ChatQuery().SetOwnerID(testUser_O1))
 	if err != nil {
 		t.Fatal("unexpected error listing owner chats:", err)
 	}
@@ -357,7 +358,7 @@ func TestStore_ChatList(t *testing.T) {
 	}
 
 	// Test filtering by status
-	activeChats, err := store.ChatList(ChatQuery().SetStatus(CHAT_STATUS_ACTIVE))
+	activeChats, err := store.ChatList(chatstore.ChatQuery().SetStatus(chatstore.CHAT_STATUS_ACTIVE))
 	if err != nil {
 		t.Fatal("unexpected error listing active chats:", err)
 	}
@@ -367,7 +368,7 @@ func TestStore_ChatList(t *testing.T) {
 	}
 
 	// Test limit and offset
-	limitedChats, err := store.ChatList(ChatQuery().SetLimit(1))
+	limitedChats, err := store.ChatList(chatstore.ChatQuery().SetLimit(1))
 	if err != nil {
 		t.Fatal("unexpected error listing limited chats:", err)
 	}
@@ -376,7 +377,7 @@ func TestStore_ChatList(t *testing.T) {
 		t.Fatalf("Expected 1 chat with limit, got %d", len(limitedChats))
 	}
 
-	offsetChats, err := store.ChatList(ChatQuery().SetOffset(1).SetLimit(2))
+	offsetChats, err := store.ChatList(chatstore.ChatQuery().SetOffset(1).SetLimit(2))
 	if err != nil {
 		t.Fatal("unexpected error listing offset chats:", err)
 	}
@@ -393,9 +394,9 @@ func TestStore_ChatSoftDelete(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	chat := NewChat().
+	chat := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
 	err = store.ChatCreate(chat)
 	if err != nil {
@@ -419,7 +420,7 @@ func TestStore_ChatSoftDelete(t *testing.T) {
 	}
 
 	// Verify the chat can be found when including soft deleted
-	query := ChatQuery().
+	query := chatstore.ChatQuery().
 		SetWithSoftDeleted(true).
 		SetID(chat.ID()).
 		SetLimit(1)
@@ -449,9 +450,9 @@ func TestStore_ChatSoftDeleteByID(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	chat := NewChat().
+	chat := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
 	err = store.ChatCreate(chat)
 	if err != nil {
@@ -475,7 +476,7 @@ func TestStore_ChatSoftDeleteByID(t *testing.T) {
 	}
 
 	// Verify the chat can be found when including soft deleted
-	query := ChatQuery().
+	query := chatstore.ChatQuery().
 		SetWithSoftDeleted(true).
 		SetID(chat.ID()).
 		SetLimit(1)
@@ -505,9 +506,9 @@ func TestStore_ChatUpdate(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	chat := NewChat().
+	chat := chatstore.NewChat().
 		SetOwnerID(testUser_O1).
-		SetStatus(CHAT_STATUS_ACTIVE)
+		SetStatus(chatstore.CHAT_STATUS_ACTIVE)
 
 	err = store.ChatCreate(chat)
 	if err != nil {
@@ -515,7 +516,7 @@ func TestStore_ChatUpdate(t *testing.T) {
 	}
 
 	// Update the chat
-	chat.SetStatus(CHAT_STATUS_INACTIVE).
+	chat.SetStatus(chatstore.CHAT_STATUS_INACTIVE).
 		SetMemo("Resolved by ops team")
 
 	err = store.ChatUpdate(chat)
@@ -529,8 +530,8 @@ func TestStore_ChatUpdate(t *testing.T) {
 		t.Fatal("unexpected error finding updated chat:", err)
 	}
 
-	if updatedChat.Status() != CHAT_STATUS_INACTIVE {
-		t.Fatalf("Status not updated. Expected %s, got %s", CHAT_STATUS_INACTIVE, updatedChat.Status())
+	if updatedChat.Status() != chatstore.CHAT_STATUS_INACTIVE {
+		t.Fatalf("Status not updated. Expected %s, got %s", chatstore.CHAT_STATUS_INACTIVE, updatedChat.Status())
 	}
 
 	if updatedChat.Memo() != "Resolved by ops team" {

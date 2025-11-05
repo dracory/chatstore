@@ -1,8 +1,9 @@
-package chatstore
+package chatstore_test
 
 import (
 	"testing"
 
+	"github.com/dracory/chatstore"
 	"github.com/dracory/sb"
 	// _ "modernc.org/sqlite"
 )
@@ -15,20 +16,20 @@ func TestStore_MessageCount(t *testing.T) {
 	}
 
 	// Create multiple messages
-	message1 := NewMessage().
+	message1 := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
 		SetText("Message 1")
 
-	message2 := NewMessage().
-		SetStatus(MESSAGE_STATUS_INACTIVE).
+	message2 := chatstore.NewMessage().
+		SetStatus(chatstore.MESSAGE_STATUS_INACTIVE).
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
 		SetText("Message 2")
 
-	message3 := NewMessage().
+	message3 := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -50,7 +51,7 @@ func TestStore_MessageCount(t *testing.T) {
 	}
 
 	// Test counting all messages
-	allCount, err := store.MessageCount(MessageQuery())
+	allCount, err := store.MessageCount(chatstore.MessageQuery())
 	if err != nil {
 		t.Fatal("unexpected error counting all messages:", err)
 	}
@@ -60,7 +61,7 @@ func TestStore_MessageCount(t *testing.T) {
 	}
 
 	// Test counting by monitor ID
-	messageCount, err := store.MessageCount(MessageQuery().SetChatID(testChat_O1))
+	messageCount, err := store.MessageCount(chatstore.MessageQuery().SetChatID(testChat_O1))
 	if err != nil {
 		t.Fatal("unexpected error counting monitor messages:", err)
 	}
@@ -70,7 +71,7 @@ func TestStore_MessageCount(t *testing.T) {
 	}
 
 	// Test counting by status
-	activeCount, err := store.MessageCount(MessageQuery().SetStatus(MESSAGE_STATUS_ACTIVE))
+	activeCount, err := store.MessageCount(chatstore.MessageQuery().SetStatus(chatstore.MESSAGE_STATUS_ACTIVE))
 	if err != nil {
 		t.Fatal("unexpected error counting active messages:", err)
 	}
@@ -91,7 +92,7 @@ func TestStore_MessageCreate(t *testing.T) {
 		t.Fatal("unexpected nil store")
 	}
 
-	message := NewMessage().
+	message := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -111,7 +112,7 @@ func TestStore_MessageCreateDuplicate(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	message := NewMessage().
+	message := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -136,7 +137,7 @@ func TestStore_MessageFindByID(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	message := NewMessage().
+	message := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -175,7 +176,7 @@ func TestStore_MessageFindByID(t *testing.T) {
 		t.Fatal("Statuses do not match")
 	}
 
-	if messageFound.Status() != MESSAGE_STATUS_ACTIVE {
+	if messageFound.Status() != chatstore.MESSAGE_STATUS_ACTIVE {
 		t.Fatal("Statuses do not match")
 	}
 
@@ -264,7 +265,7 @@ func TestStore_MessageDelete(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	message := NewMessage().
+	message := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -299,7 +300,7 @@ func TestStore_MessageDeleteByID(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	message := NewMessage().
+	message := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -335,13 +336,13 @@ func TestStore_MessageList(t *testing.T) {
 	}
 
 	// Create multiple messages
-	message1 := NewMessage().
+	message1 := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
 		SetText("Message 1")
 
-	message2 := NewMessage().
+	message2 := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -358,7 +359,7 @@ func TestStore_MessageList(t *testing.T) {
 	}
 
 	// Test listing all messages
-	allMessages, err := store.MessageList(MessageQuery())
+	allMessages, err := store.MessageList(chatstore.MessageQuery())
 	if err != nil {
 		t.Fatal("unexpected error listing all messages:", err)
 	}
@@ -368,7 +369,7 @@ func TestStore_MessageList(t *testing.T) {
 	}
 
 	// Test filtering by chat ID
-	chatMessages, err := store.MessageList(MessageQuery().SetChatID(testChat_O1))
+	chatMessages, err := store.MessageList(chatstore.MessageQuery().SetChatID(testChat_O1))
 	if err != nil {
 		t.Fatal("unexpected error listing chat messages:", err)
 	}
@@ -378,7 +379,7 @@ func TestStore_MessageList(t *testing.T) {
 	}
 
 	// Test filtering by status
-	activeMessages, err := store.MessageList(MessageQuery().SetStatus(MESSAGE_STATUS_ACTIVE))
+	activeMessages, err := store.MessageList(chatstore.MessageQuery().SetStatus(chatstore.MESSAGE_STATUS_ACTIVE))
 	if err != nil {
 		t.Fatal("unexpected error listing active messages:", err)
 	}
@@ -388,7 +389,7 @@ func TestStore_MessageList(t *testing.T) {
 	}
 
 	// Test limit and offset
-	limitedMessages, err := store.MessageList(MessageQuery().SetLimit(1))
+	limitedMessages, err := store.MessageList(chatstore.MessageQuery().SetLimit(1))
 	if err != nil {
 		t.Fatal("unexpected error listing limited messages:", err)
 	}
@@ -397,7 +398,7 @@ func TestStore_MessageList(t *testing.T) {
 		t.Fatalf("Expected 1 message with limit, got %d", len(limitedMessages))
 	}
 
-	offsetMessages, err := store.MessageList(MessageQuery().SetOffset(1).SetLimit(2))
+	offsetMessages, err := store.MessageList(chatstore.MessageQuery().SetOffset(1).SetLimit(2))
 	if err != nil {
 		t.Fatal("unexpected error listing offset messages:", err)
 	}
@@ -414,7 +415,7 @@ func TestStore_MessageSoftDelete(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	message := NewMessage().
+	message := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -442,7 +443,7 @@ func TestStore_MessageSoftDelete(t *testing.T) {
 	}
 
 	// Verify the message can be found when including soft deleted
-	query := MessageQuery().
+	query := chatstore.MessageQuery().
 		SetWithSoftDeleted(true).
 		SetID(message.ID()).
 		SetLimit(1)
@@ -472,7 +473,7 @@ func TestStore_MessageSoftDeleteByID(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	message := NewMessage().
+	message := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).
@@ -500,7 +501,7 @@ func TestStore_MessageSoftDeleteByID(t *testing.T) {
 	}
 
 	// Verify the message can be found when including soft deleted
-	query := MessageQuery().
+	query := chatstore.MessageQuery().
 		SetWithSoftDeleted(true).
 		SetID(message.ID()).
 		SetLimit(1)
@@ -530,7 +531,7 @@ func TestStore_MessageUpdate(t *testing.T) {
 		t.Fatal("unexpected error:", err)
 	}
 
-	message := NewMessage().
+	message := chatstore.NewMessage().
 		SetChatID(testChat_O1).
 		SetSenderID(testUser_O1).
 		SetRecipientID(testUser_O2).

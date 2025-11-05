@@ -1,9 +1,11 @@
-package chatstore
+package chatstore_test
 
 import (
 	"database/sql"
 	"errors"
 	"os"
+
+	"github.com/dracory/chatstore"
 
 	_ "modernc.org/sqlite"
 )
@@ -34,14 +36,14 @@ func initDB(filepath string) (*sql.DB, error) {
 	return db, nil
 }
 
-func initStore(filepath string) (StoreInterface, error) {
+func initStore(filepath string) (chatstore.StoreInterface, error) {
 	db, err := initDB(filepath)
 
 	if err != nil {
 		return nil, err
 	}
 
-	store, err := NewStore(NewStoreOptions{
+	store, err := chatstore.NewStore(chatstore.NewStoreOptions{
 		DB:                 db,
 		TableChatName:      "chat_table",
 		TableMessageName:   "message_table",
@@ -57,4 +59,11 @@ func initStore(filepath string) (StoreInterface, error) {
 	}
 
 	return store, nil
+}
+
+// fileExists checks if a file exists
+func fileExists(filePath string) bool {
+	_, err := os.Stat(filePath)
+
+	return !os.IsNotExist(err)
 }
