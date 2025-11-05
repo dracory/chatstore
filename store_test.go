@@ -15,7 +15,7 @@ const testMessage_O2 = "00000000000000000000000000000060"
 const testUser_O1 = "00000000000000000000000000000030"
 const testUser_O2 = "00000000000000000000000000000040"
 
-func initDB(filepath string) *sql.DB {
+func initDB(filepath string) (*sql.DB, error) {
 	if filepath != ":memory:" && fileExists(filepath) {
 		err := os.Remove(filepath) // remove database
 
@@ -28,14 +28,18 @@ func initDB(filepath string) *sql.DB {
 	db, err := sql.Open("sqlite", dsn)
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return db
+	return db, nil
 }
 
 func initStore(filepath string) (StoreInterface, error) {
-	db := initDB(filepath)
+	db, err := initDB(filepath)
+
+	if err != nil {
+		return nil, err
+	}
 
 	store, err := NewStore(NewStoreOptions{
 		DB:                 db,
