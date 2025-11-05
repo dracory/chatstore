@@ -5,7 +5,7 @@ import (
 	"errors"
 	"os"
 
-	_ "github.com/glebarez/sqlite"
+	_ "modernc.org/sqlite"
 )
 
 const testChat_O1 = "00000000000000000000000000000010"
