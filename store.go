@@ -3,6 +3,7 @@ package chatstore
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log/slog"
 	"os"
 )
@@ -37,9 +38,19 @@ func (store *store) AutoMigrate() error {
 		return errors.New("chatstore: database is nil")
 	}
 
+	sqlChat, err := store.sqlChatTableCreate()
+	if err != nil {
+		return fmt.Errorf("failed to generate chat table SQL: %w", err)
+	}
+
+	sqlMessage, err := store.sqlMessageTableCreate()
+	if err != nil {
+		return fmt.Errorf("failed to generate message table SQL: %w", err)
+	}
+
 	sqls := []string{
-		store.sqlChatTableCreate(),
-		store.sqlMessageTableCreate(),
+		sqlChat,
+		sqlMessage,
 	}
 
 	for _, sql := range sqls {

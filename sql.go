@@ -5,8 +5,8 @@ import (
 )
 
 // sqlChatTableCreate returns a SQL string for creating the chat table
-func (st *store) sqlChatTableCreate() string {
-	sql := sb.NewBuilder(sb.DatabaseDriverName(st.db)).
+func (st *store) sqlChatTableCreate() (string, error) {
+	sql, err := sb.NewBuilder(sb.DatabaseDriverName(st.db)).
 		Table(st.tableChat).
 		Column(sb.Column{
 			Name:       COLUMN_ID,
@@ -51,12 +51,16 @@ func (st *store) sqlChatTableCreate() string {
 		}).
 		CreateIfNotExists()
 
-	return sql
+	if err != nil {
+		return "", err
+	}
+
+	return sql, nil
 }
 
 // sqlMessageTableCreate returns a SQL string for creating the chat message table
-func (st *store) sqlMessageTableCreate() string {
-	sql := sb.NewBuilder(sb.DatabaseDriverName(st.db)).
+func (st *store) sqlMessageTableCreate() (string, error) {
+	sql, err := sb.NewBuilder(sb.DatabaseDriverName(st.db)).
 		Table(st.tableMessage).
 		Column(sb.Column{
 			Name:       COLUMN_ID,
@@ -110,5 +114,9 @@ func (st *store) sqlMessageTableCreate() string {
 		}).
 		CreateIfNotExists()
 
-	return sql
+	if err != nil {
+		return "", err
+	}
+
+	return sql, nil
 }
