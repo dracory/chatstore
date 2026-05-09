@@ -190,3 +190,7 @@ func (o *chatImplementation) SetUpdatedAt(updatedAt string) ChatInterface {
 	o.Set(COLUMN_UPDATED_AT, updatedAt)
 	return o
 }
+
+func (o *chatImplementation) MarkAsNotDirty() {
+	o.DataObject.MarkAsNotDirty()
+}
