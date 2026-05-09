@@ -10,21 +10,21 @@ import (
 )
 
 // chatQuery implements the ChatQueryInterface
-type chatQuery struct {
+type chatQueryImplementation struct {
 	params map[string]any
 }
 
-var _ ChatQueryInterface = (*chatQuery)(nil)
+var _ ChatQueryInterface = (*chatQueryImplementation)(nil)
 
 // ChatQuery creates a new chat query
 func ChatQuery() ChatQueryInterface {
-	return &chatQuery{
+	return &chatQueryImplementation{
 		params: map[string]any{},
 	}
 }
 
 // Validate validates the query parameters
-func (q *chatQuery) Validate() error {
+func (q *chatQueryImplementation) Validate() error {
 	if q.IsOwnerIDSet() && q.GetOwnerID() == "" {
 		return errors.New("chat query: owner_id cannot be empty")
 	}
@@ -64,7 +64,7 @@ func (q *chatQuery) Validate() error {
 	return nil
 }
 
-func (q *chatQuery) ToSelectDataset(st *store) (selectDataset *goqu.SelectDataset, columns []any, err error) {
+func (q *chatQueryImplementation) ToSelectDataset(st *store) (selectDataset *goqu.SelectDataset, columns []any, err error) {
 	if st == nil {
 		return nil, []any{}, errors.New("store cannot be nil")
 	}
@@ -184,11 +184,11 @@ func (q *chatQuery) ToSelectDataset(st *store) (selectDataset *goqu.SelectDatase
 // == Getters and Setters
 // ============================================================================
 
-func (q *chatQuery) IsOwnerIDSet() bool {
+func (q *chatQueryImplementation) IsOwnerIDSet() bool {
 	return q.hasProperty("owner_id")
 }
 
-func (q *chatQuery) GetOwnerID() string {
+func (q *chatQueryImplementation) GetOwnerID() string {
 	if q.IsOwnerIDSet() {
 		return q.params["owner_id"].(string)
 	}
@@ -196,16 +196,16 @@ func (q *chatQuery) GetOwnerID() string {
 	return ""
 }
 
-func (q *chatQuery) SetOwnerID(ownerID string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetOwnerID(ownerID string) ChatQueryInterface {
 	q.params["owner_id"] = ownerID
 	return q
 }
 
-func (q *chatQuery) IsCountOnlySet() bool {
+func (q *chatQueryImplementation) IsCountOnlySet() bool {
 	return q.hasProperty("count_only")
 }
 
-func (q *chatQuery) GetCountOnly() bool {
+func (q *chatQueryImplementation) GetCountOnly() bool {
 	if q.IsCountOnlySet() {
 		return q.params["count_only"].(bool)
 	}
@@ -213,16 +213,16 @@ func (q *chatQuery) GetCountOnly() bool {
 	return false
 }
 
-func (q *chatQuery) SetCountOnly(countOnly bool) ChatQueryInterface {
+func (q *chatQueryImplementation) SetCountOnly(countOnly bool) ChatQueryInterface {
 	q.params["count_only"] = countOnly
 	return q
 }
 
-func (q *chatQuery) IsCreatedAtGteSet() bool {
+func (q *chatQueryImplementation) IsCreatedAtGteSet() bool {
 	return q.hasProperty("created_at_gte")
 }
 
-func (q *chatQuery) GetCreatedAtGte() string {
+func (q *chatQueryImplementation) GetCreatedAtGte() string {
 	if q.IsCreatedAtGteSet() {
 		return q.params["created_at_gte"].(string)
 	}
@@ -230,16 +230,16 @@ func (q *chatQuery) GetCreatedAtGte() string {
 	return ""
 }
 
-func (q *chatQuery) SetCreatedAtGte(createdAtGte string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetCreatedAtGte(createdAtGte string) ChatQueryInterface {
 	q.params["created_at_gte"] = createdAtGte
 	return q
 }
 
-func (q *chatQuery) IsCreatedAtLteSet() bool {
+func (q *chatQueryImplementation) IsCreatedAtLteSet() bool {
 	return q.hasProperty("created_at_lte")
 }
 
-func (q *chatQuery) GetCreatedAtLte() string {
+func (q *chatQueryImplementation) GetCreatedAtLte() string {
 	if q.IsCreatedAtLteSet() {
 		return q.params["created_at_lte"].(string)
 	}
@@ -247,15 +247,15 @@ func (q *chatQuery) GetCreatedAtLte() string {
 	return ""
 }
 
-func (q *chatQuery) SetCreatedAtLte(createdAtLte string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetCreatedAtLte(createdAtLte string) ChatQueryInterface {
 	q.params["created_at_lte"] = createdAtLte
 	return q
 }
 
-func (q *chatQuery) IsIDSet() bool {
+func (q *chatQueryImplementation) IsIDSet() bool {
 	return q.hasProperty("id")
 }
-func (q *chatQuery) GetID() string {
+func (q *chatQueryImplementation) GetID() string {
 	if q.IsIDSet() {
 		return q.params["id"].(string)
 	}
@@ -263,16 +263,16 @@ func (q *chatQuery) GetID() string {
 	return ""
 }
 
-func (q *chatQuery) SetID(id string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetID(id string) ChatQueryInterface {
 	q.params["id"] = id
 	return q
 }
 
-func (q *chatQuery) IsIDInSet() bool {
+func (q *chatQueryImplementation) IsIDInSet() bool {
 	return q.hasProperty("id_in")
 }
 
-func (q *chatQuery) GetIDIn() []string {
+func (q *chatQueryImplementation) GetIDIn() []string {
 	if q.IsIDInSet() {
 		return q.params["id_in"].([]string)
 	}
@@ -280,16 +280,16 @@ func (q *chatQuery) GetIDIn() []string {
 	return []string{}
 }
 
-func (q *chatQuery) SetIDIn(idIn []string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetIDIn(idIn []string) ChatQueryInterface {
 	q.params["id_in"] = idIn
 	return q
 }
 
-func (q *chatQuery) IsLimitSet() bool {
+func (q *chatQueryImplementation) IsLimitSet() bool {
 	return q.hasProperty("limit")
 }
 
-func (q *chatQuery) GetLimit() int {
+func (q *chatQueryImplementation) GetLimit() int {
 	if q.IsLimitSet() {
 		return q.params["limit"].(int)
 	}
@@ -297,16 +297,16 @@ func (q *chatQuery) GetLimit() int {
 	return 0
 }
 
-func (q *chatQuery) SetLimit(limit int) ChatQueryInterface {
+func (q *chatQueryImplementation) SetLimit(limit int) ChatQueryInterface {
 	q.params["limit"] = limit
 	return q
 }
 
-func (q *chatQuery) IsOffsetSet() bool {
+func (q *chatQueryImplementation) IsOffsetSet() bool {
 	return q.hasProperty("offset")
 }
 
-func (q *chatQuery) GetOffset() int {
+func (q *chatQueryImplementation) GetOffset() int {
 	if q.IsOffsetSet() {
 		return q.params["offset"].(int)
 	}
@@ -314,16 +314,16 @@ func (q *chatQuery) GetOffset() int {
 	return 0
 }
 
-func (q *chatQuery) SetOffset(offset int) ChatQueryInterface {
+func (q *chatQueryImplementation) SetOffset(offset int) ChatQueryInterface {
 	q.params["offset"] = offset
 	return q
 }
 
-func (q *chatQuery) IsOnlySoftDeletedSet() bool {
+func (q *chatQueryImplementation) IsOnlySoftDeletedSet() bool {
 	return q.hasProperty("only_soft_deleted")
 }
 
-func (q *chatQuery) GetOnlySoftDeleted() bool {
+func (q *chatQueryImplementation) GetOnlySoftDeleted() bool {
 	if q.IsOnlySoftDeletedSet() {
 		return q.params["only_soft_deleted"].(bool)
 	}
@@ -331,16 +331,16 @@ func (q *chatQuery) GetOnlySoftDeleted() bool {
 	return false
 }
 
-func (q *chatQuery) SetOnlySoftDeleted(onlySoftDeleted bool) ChatQueryInterface {
+func (q *chatQueryImplementation) SetOnlySoftDeleted(onlySoftDeleted bool) ChatQueryInterface {
 	q.params["only_soft_deleted"] = onlySoftDeleted
 	return q
 }
 
-func (q *chatQuery) IsOrderDirectionSet() bool {
+func (q *chatQueryImplementation) IsOrderDirectionSet() bool {
 	return q.hasProperty("order_direction")
 }
 
-func (q *chatQuery) GetOrderDirection() string {
+func (q *chatQueryImplementation) GetOrderDirection() string {
 	if q.IsOrderDirectionSet() {
 		return q.params["order_direction"].(string)
 	}
@@ -348,16 +348,16 @@ func (q *chatQuery) GetOrderDirection() string {
 	return ""
 }
 
-func (q *chatQuery) SetOrderDirection(orderDirection string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetOrderDirection(orderDirection string) ChatQueryInterface {
 	q.params["order_direction"] = orderDirection
 	return q
 }
 
-func (q *chatQuery) IsOrderBySet() bool {
+func (q *chatQueryImplementation) IsOrderBySet() bool {
 	return q.hasProperty("order_by")
 }
 
-func (q *chatQuery) GetOrderBy() string {
+func (q *chatQueryImplementation) GetOrderBy() string {
 	if q.IsOrderBySet() {
 		return q.params["order_by"].(string)
 	}
@@ -365,16 +365,16 @@ func (q *chatQuery) GetOrderBy() string {
 	return ""
 }
 
-func (q *chatQuery) SetOrderBy(orderBy string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetOrderBy(orderBy string) ChatQueryInterface {
 	q.params["order_by"] = orderBy
 	return q
 }
 
-func (q *chatQuery) IsStatusSet() bool {
+func (q *chatQueryImplementation) IsStatusSet() bool {
 	return q.hasProperty("status")
 }
 
-func (q *chatQuery) GetStatus() string {
+func (q *chatQueryImplementation) GetStatus() string {
 	if q.IsStatusSet() {
 		return q.params["status"].(string)
 	}
@@ -382,16 +382,16 @@ func (q *chatQuery) GetStatus() string {
 	return ""
 }
 
-func (q *chatQuery) SetStatus(status string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetStatus(status string) ChatQueryInterface {
 	q.params["status"] = status
 	return q
 }
 
-func (q *chatQuery) IsStatusInSet() bool {
+func (q *chatQueryImplementation) IsStatusInSet() bool {
 	return q.hasProperty("status_in")
 }
 
-func (q *chatQuery) GetStatusIn() []string {
+func (q *chatQueryImplementation) GetStatusIn() []string {
 	if q.IsStatusInSet() {
 		return q.params["status_in"].([]string)
 	}
@@ -399,16 +399,16 @@ func (q *chatQuery) GetStatusIn() []string {
 	return []string{}
 }
 
-func (q *chatQuery) SetStatusIn(statusIn []string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetStatusIn(statusIn []string) ChatQueryInterface {
 	q.params["status_in"] = statusIn
 	return q
 }
 
-func (q *chatQuery) IsUpdatedAtGteSet() bool {
+func (q *chatQueryImplementation) IsUpdatedAtGteSet() bool {
 	return q.hasProperty("updated_at_gte")
 }
 
-func (q *chatQuery) GetUpdatedAtGte() string {
+func (q *chatQueryImplementation) GetUpdatedAtGte() string {
 	if q.IsUpdatedAtGteSet() {
 		return q.params["updated_at_gte"].(string)
 	}
@@ -416,16 +416,16 @@ func (q *chatQuery) GetUpdatedAtGte() string {
 	return ""
 }
 
-func (q *chatQuery) SetUpdatedAtGte(updatedAt string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetUpdatedAtGte(updatedAt string) ChatQueryInterface {
 	q.params["updated_at_gte"] = updatedAt
 	return q
 }
 
-func (q *chatQuery) IsUpdatedAtLteSet() bool {
+func (q *chatQueryImplementation) IsUpdatedAtLteSet() bool {
 	return q.hasProperty("updated_at_lte")
 }
 
-func (q *chatQuery) GetUpdatedAtLte() string {
+func (q *chatQueryImplementation) GetUpdatedAtLte() string {
 	if q.IsUpdatedAtLteSet() {
 		return q.params["updated_at_lte"].(string)
 	}
@@ -433,16 +433,16 @@ func (q *chatQuery) GetUpdatedAtLte() string {
 	return ""
 }
 
-func (q *chatQuery) SetUpdatedAtLte(updatedAt string) ChatQueryInterface {
+func (q *chatQueryImplementation) SetUpdatedAtLte(updatedAt string) ChatQueryInterface {
 	q.params["updated_at_lte"] = updatedAt
 	return q
 }
 
-func (q *chatQuery) IsWithSoftDeletedSet() bool {
+func (q *chatQueryImplementation) IsWithSoftDeletedSet() bool {
 	return q.hasProperty("with_soft_deleted")
 }
 
-func (q *chatQuery) GetWithSoftDeleted() bool {
+func (q *chatQueryImplementation) GetWithSoftDeleted() bool {
 	if q.IsWithSoftDeletedSet() {
 		return q.params["with_soft_deleted"].(bool)
 	}
@@ -450,11 +450,11 @@ func (q *chatQuery) GetWithSoftDeleted() bool {
 	return false
 }
 
-func (q *chatQuery) SetWithSoftDeleted(withSoftDeleted bool) ChatQueryInterface {
+func (q *chatQueryImplementation) SetWithSoftDeleted(withSoftDeleted bool) ChatQueryInterface {
 	q.params["with_soft_deleted"] = withSoftDeleted
 	return q
 }
 
-func (q *chatQuery) hasProperty(key string) bool {
+func (q *chatQueryImplementation) hasProperty(key string) bool {
 	return q.params[key] != nil
 }

@@ -14,12 +14,12 @@ const CHAT_MESSAGE_STATUS_ACTIVE = "active"
 const CHAT_MESSAGE_STATUS_INACTIVE = "inactive"
 const CHAT_MESSAGE_STATUS_DELETED = "deleted"
 
-type Message struct {
+type messageImplementation struct {
 	dataobject.DataObject
 }
 
 func NewMessage() MessageInterface {
-	o := &Message{}
+	o := &messageImplementation{}
 	o.SetID(uid.HumanUid())
 	o.SetStatus(CHAT_MESSAGE_STATUS_ACTIVE)
 	// REQUIRED: o.SetChatID("")
@@ -37,47 +37,47 @@ func NewMessage() MessageInterface {
 }
 
 func NewMessageFromExistingData(data map[string]string) MessageInterface {
-	o := &Message{}
+	o := &messageImplementation{}
 	o.Hydrate(data)
 	return o
 }
 
 // IsSoftDeleted checks if the message is soft deleted
-func (o *Message) IsSoftDeleted() bool {
+func (o *messageImplementation) IsSoftDeleted() bool {
 	return o.SoftDeletedAt() != sb.MAX_DATETIME
 }
 
-func (o *Message) ChatID() string {
+func (o *messageImplementation) ChatID() string {
 	return o.Get(COLUMN_CHAT_ID)
 }
 
-func (o *Message) SetChatID(id string) MessageInterface {
+func (o *messageImplementation) SetChatID(id string) MessageInterface {
 	o.Set(COLUMN_CHAT_ID, id)
 	return o
 }
 
-func (o *Message) CreatedAt() string {
+func (o *messageImplementation) CreatedAt() string {
 	return o.Get(COLUMN_CREATED_AT)
 }
 
-func (o *Message) CreatedAtCarbon() *carbon.Carbon {
+func (o *messageImplementation) CreatedAtCarbon() *carbon.Carbon {
 	return carbon.Parse(o.Get(COLUMN_CREATED_AT), carbon.UTC)
 }
-func (o *Message) SetCreatedAt(createdAt string) MessageInterface {
+func (o *messageImplementation) SetCreatedAt(createdAt string) MessageInterface {
 	o.Set(COLUMN_CREATED_AT, createdAt)
 	return o
 }
 
-func (o *Message) Memo() string {
+func (o *messageImplementation) Memo() string {
 	return o.Get(COLUMN_MEMO)
 }
 
-func (o *Message) SetMemo(memo string) MessageInterface {
+func (o *messageImplementation) SetMemo(memo string) MessageInterface {
 	o.Set(COLUMN_MEMO, memo)
 	return o
 }
 
-func (o *Message) Meta(key string) (string, error) {
+func (o *messageImplementation) Meta(key string) (string, error) {
 	metas, err := o.Metas()
 	if err != nil {
 		return "", err
@@ -85,13 +85,13 @@ func (o *Message) Meta(key string) (string, error) {
 	return metas[key], nil
 }
 
-func (o *Message) SetMeta(key string, value string) error {
+func (o *messageImplementation) SetMeta(key string, value string) error {
 	return o.UpsertMetas(map[string]string{
 		key: value,
 	})
 }
 
-func (o *Message) Metas() (map[string]string, error) {
+func (o *messageImplementation) Metas() (map[string]string, error) {
 	metasStr := o.Get(COLUMN_METAS)
 
 	if metasStr == "" {
@@ -107,7 +107,7 @@ func (o *Message) Metas() (map[string]string, error) {
 	return metasJson, nil
 }
 
-func (o *Message) SetMetas(metas map[string]string) error {
+func (o *messageImplementation) SetMetas(metas map[string]string) error {
 	mapString, err := json.Marshal(metas)
 	if err != nil {
 		return err
@@ -117,7 +117,7 @@ func (o *Message) SetMetas(metas map[string]string) error {
 	return nil
 }
 
-func (o *Message) UpsertMetas(metas map[string]string) error {
+func (o *messageImplementation) UpsertMetas(metas map[string]string) error {
 	currentMetas, err := o.Metas()
 
 	if err != nil {
@@ -129,64 +129,64 @@ func (o *Message) UpsertMetas(metas map[string]string) error {
 	return o.SetMetas(currentMetas)
 }
 
-func (o *Message) RecipientID() string {
+func (o *messageImplementation) RecipientID() string {
 	return o.Get(COLUMN_RECIPIENT_ID)
 }
 
-func (o *Message) SetRecipientID(id string) MessageInterface {
+func (o *messageImplementation) SetRecipientID(id string) MessageInterface {
 	o.Set(COLUMN_RECIPIENT_ID, id)
 	return o
 }
 
-func (o *Message) SenderID() string {
+func (o *messageImplementation) SenderID() string {
 	return o.Get(COLUMN_SENDER_ID)
 }
 
-func (o *Message) SetSenderID(id string) MessageInterface {
+func (o *messageImplementation) SetSenderID(id string) MessageInterface {
 	o.Set(COLUMN_SENDER_ID, id)
 	return o
 }
 
-func (o *Message) SetSoftDeletedAt(softDeletedAt string) MessageInterface {
+func (o *messageImplementation) SetSoftDeletedAt(softDeletedAt string) MessageInterface {
 	o.Set(COLUMN_SOFT_DELETED_AT, softDeletedAt)
 	return o
 }
 
-func (o *Message) SoftDeletedAt() string {
+func (o *messageImplementation) SoftDeletedAt() string {
 	return o.Get(COLUMN_SOFT_DELETED_AT)
 }
 
-func (o *Message) SoftDeletedAtCarbon() *carbon.Carbon {
+func (o *messageImplementation) SoftDeletedAtCarbon() *carbon.Carbon {
 	return carbon.Parse(o.SoftDeletedAt(), carbon.UTC)
 }
 
-func (o *Message) Status() string {
+func (o *messageImplementation) Status() string {
 	return o.Get(COLUMN_STATUS)
 }
 
-func (o *Message) SetStatus(status string) MessageInterface {
+func (o *messageImplementation) SetStatus(status string) MessageInterface {
 	o.Set(COLUMN_STATUS, status)
 	return o
 }
 
-func (o *Message) Text() string {
+func (o *messageImplementation) Text() string {
 	return o.Get(COLUMN_TEXT)
 }
 
-func (o *Message) SetText(text string) MessageInterface {
+func (o *messageImplementation) SetText(text string) MessageInterface {
 	o.Set(COLUMN_TEXT, text)
 	return o
 }
 
-func (o *Message) UpdatedAt() string {
+func (o *messageImplementation) UpdatedAt() string {
 	return o.Get(COLUMN_UPDATED_AT)
 }
 
-func (o *Message) UpdatedAtCarbon() *carbon.Carbon {
+func (o *messageImplementation) UpdatedAtCarbon() *carbon.Carbon {
 	return carbon.Parse(o.Get(COLUMN_UPDATED_AT), carbon.UTC)
 }
 
-func (o *Message) SetUpdatedAt(updatedAt string) MessageInterface {
+func (o *messageImplementation) SetUpdatedAt(updatedAt string) MessageInterface {
 	o.Set(COLUMN_UPDATED_AT, updatedAt)
 	return o
 }

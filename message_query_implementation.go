@@ -10,20 +10,20 @@ import (
 )
 
 // messageQuery implements the MessageQueryInterface
-type messageQuery struct {
+type messageQueryImplementation struct {
 	params map[string]interface{}
 }
 
-var _ MessageQueryInterface = (*messageQuery)(nil)
+var _ MessageQueryInterface = (*messageQueryImplementation)(nil)
 
 // MessageQuery creates a new message query
 func MessageQuery() MessageQueryInterface {
-	return &messageQuery{
+	return &messageQueryImplementation{
 		params: map[string]interface{}{},
 	}
 }
 
-func (q *messageQuery) ToSelectDataset(st *store) (selectDataset *goqu.SelectDataset, columns []any, err error) {
+func (q *messageQueryImplementation) ToSelectDataset(st *store) (selectDataset *goqu.SelectDataset, columns []any, err error) {
 	if st == nil {
 		return nil, []any{}, errors.New("store cannot be nil")
 	}
@@ -160,7 +160,7 @@ func (q *messageQuery) ToSelectDataset(st *store) (selectDataset *goqu.SelectDat
 }
 
 // Validate validates the query parameters
-func (q *messageQuery) Validate() error {
+func (q *messageQueryImplementation) Validate() error {
 	if q.IsChatIDSet() && q.GetChatID() == "" {
 		return errors.New("message query: chat_id cannot be empty")
 	}
@@ -224,11 +224,11 @@ func (q *messageQuery) Validate() error {
 // == Getters and Setters
 // ============================================================================
 
-func (q *messageQuery) IsCountOnlySet() bool {
+func (q *messageQueryImplementation) IsCountOnlySet() bool {
 	return q.hasProperty("count_only")
 }
 
-func (q *messageQuery) GetCountOnly() bool {
+func (q *messageQueryImplementation) GetCountOnly() bool {
 	if q.IsCountOnlySet() {
 		return q.params["count_only"].(bool)
 	}
@@ -236,16 +236,16 @@ func (q *messageQuery) GetCountOnly() bool {
 	return false
 }
 
-func (q *messageQuery) SetCountOnly(countOnly bool) MessageQueryInterface {
+func (q *messageQueryImplementation) SetCountOnly(countOnly bool) MessageQueryInterface {
 	q.params["count_only"] = countOnly
 	return q
 }
 
-func (q *messageQuery) IsCreatedAtGteSet() bool {
+func (q *messageQueryImplementation) IsCreatedAtGteSet() bool {
 	return q.hasProperty("created_at_gte")
 }
 
-func (q *messageQuery) GetCreatedAtGte() string {
+func (q *messageQueryImplementation) GetCreatedAtGte() string {
 	if q.IsCreatedAtGteSet() {
 		return q.params["created_at_gte"].(string)
 	}
@@ -253,16 +253,16 @@ func (q *messageQuery) GetCreatedAtGte() string {
 	return ""
 }
 
-func (q *messageQuery) SetCreatedAtGte(createdAtGte string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetCreatedAtGte(createdAtGte string) MessageQueryInterface {
 	q.params["created_at_gte"] = createdAtGte
 	return q
 }
 
-func (q *messageQuery) IsCreatedAtLteSet() bool {
+func (q *messageQueryImplementation) IsCreatedAtLteSet() bool {
 	return q.hasProperty("created_at_lte")
 }
 
-func (q *messageQuery) GetCreatedAtLte() string {
+func (q *messageQueryImplementation) GetCreatedAtLte() string {
 	if q.IsCreatedAtLteSet() {
 		return q.params["created_at_lte"].(string)
 	}
@@ -270,16 +270,16 @@ func (q *messageQuery) GetCreatedAtLte() string {
 	return ""
 }
 
-func (q *messageQuery) SetCreatedAtLte(createdAtLte string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetCreatedAtLte(createdAtLte string) MessageQueryInterface {
 	q.params["created_at_lte"] = createdAtLte
 	return q
 }
 
-func (q *messageQuery) IsChatIDSet() bool {
+func (q *messageQueryImplementation) IsChatIDSet() bool {
 	return q.hasProperty("chat_id")
 }
 
-func (q *messageQuery) GetChatID() string {
+func (q *messageQueryImplementation) GetChatID() string {
 	if q.IsChatIDSet() {
 		return q.params["chat_id"].(string)
 	}
@@ -287,16 +287,16 @@ func (q *messageQuery) GetChatID() string {
 	return ""
 }
 
-func (q *messageQuery) SetChatID(chatID string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetChatID(chatID string) MessageQueryInterface {
 	q.params["chat_id"] = chatID
 	return q
 }
 
-func (q *messageQuery) IsChatIDInSet() bool {
+func (q *messageQueryImplementation) IsChatIDInSet() bool {
 	return q.hasProperty("chat_id_in")
 }
 
-func (q *messageQuery) GetChatIDIn() []string {
+func (q *messageQueryImplementation) GetChatIDIn() []string {
 	if q.IsChatIDInSet() {
 		return q.params["chat_id_in"].([]string)
 	}
@@ -304,16 +304,16 @@ func (q *messageQuery) GetChatIDIn() []string {
 	return []string{}
 }
 
-func (q *messageQuery) SetChatIDIn(chatIDIn []string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetChatIDIn(chatIDIn []string) MessageQueryInterface {
 	q.params["chat_id_in"] = chatIDIn
 	return q
 }
 
-func (q *messageQuery) IsIDSet() bool {
+func (q *messageQueryImplementation) IsIDSet() bool {
 	return q.hasProperty("id")
 }
 
-func (q *messageQuery) GetID() string {
+func (q *messageQueryImplementation) GetID() string {
 	if q.IsIDSet() {
 		return q.params["id"].(string)
 	}
@@ -321,16 +321,16 @@ func (q *messageQuery) GetID() string {
 	return ""
 }
 
-func (q *messageQuery) SetID(id string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetID(id string) MessageQueryInterface {
 	q.params["id"] = id
 	return q
 }
 
-func (q *messageQuery) IsIDInSet() bool {
+func (q *messageQueryImplementation) IsIDInSet() bool {
 	return q.hasProperty("id_in")
 }
 
-func (q *messageQuery) GetIDIn() []string {
+func (q *messageQueryImplementation) GetIDIn() []string {
 	if q.IsIDInSet() {
 		return q.params["id_in"].([]string)
 	}
@@ -338,16 +338,16 @@ func (q *messageQuery) GetIDIn() []string {
 	return []string{}
 }
 
-func (q *messageQuery) SetIDIn(idIn []string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetIDIn(idIn []string) MessageQueryInterface {
 	q.params["id_in"] = idIn
 	return q
 }
 
-func (q *messageQuery) IsLimitSet() bool {
+func (q *messageQueryImplementation) IsLimitSet() bool {
 	return q.hasProperty("limit")
 }
 
-func (q *messageQuery) GetLimit() int {
+func (q *messageQueryImplementation) GetLimit() int {
 	if q.IsLimitSet() {
 		return q.params["limit"].(int)
 	}
@@ -355,11 +355,11 @@ func (q *messageQuery) GetLimit() int {
 	return 0
 }
 
-func (q *messageQuery) IsIDNotInSet() bool {
+func (q *messageQueryImplementation) IsIDNotInSet() bool {
 	return q.hasProperty("id_not_in")
 }
 
-func (q *messageQuery) GetIDNotIn() []string {
+func (q *messageQueryImplementation) GetIDNotIn() []string {
 	if q.IsIDNotInSet() {
 		return q.params["id_not_in"].([]string)
 	}
@@ -367,21 +367,21 @@ func (q *messageQuery) GetIDNotIn() []string {
 	return []string{}
 }
 
-func (q *messageQuery) SetIDNotIn(idNotIn []string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetIDNotIn(idNotIn []string) MessageQueryInterface {
 	q.params["id_not_in"] = idNotIn
 	return q
 }
 
-func (q *messageQuery) SetLimit(limit int) MessageQueryInterface {
+func (q *messageQueryImplementation) SetLimit(limit int) MessageQueryInterface {
 	q.params["limit"] = limit
 	return q
 }
 
-func (q *messageQuery) IsOffsetSet() bool {
+func (q *messageQueryImplementation) IsOffsetSet() bool {
 	return q.hasProperty("offset")
 }
 
-func (q *messageQuery) GetOffset() int {
+func (q *messageQueryImplementation) GetOffset() int {
 	if q.IsOffsetSet() {
 		return q.params["offset"].(int)
 	}
@@ -389,16 +389,16 @@ func (q *messageQuery) GetOffset() int {
 	return 0
 }
 
-func (q *messageQuery) SetOffset(offset int) MessageQueryInterface {
+func (q *messageQueryImplementation) SetOffset(offset int) MessageQueryInterface {
 	q.params["offset"] = offset
 	return q
 }
 
-func (q *messageQuery) IsOnlySoftDeletedSet() bool {
+func (q *messageQueryImplementation) IsOnlySoftDeletedSet() bool {
 	return q.hasProperty("only_soft_deleted")
 }
 
-func (q *messageQuery) GetOnlySoftDeleted() bool {
+func (q *messageQueryImplementation) GetOnlySoftDeleted() bool {
 	if q.IsOnlySoftDeletedSet() {
 		return q.params["only_soft_deleted"].(bool)
 	}
@@ -406,16 +406,16 @@ func (q *messageQuery) GetOnlySoftDeleted() bool {
 	return false
 }
 
-func (q *messageQuery) SetOnlySoftDeleted(onlySoftDeleted bool) MessageQueryInterface {
+func (q *messageQueryImplementation) SetOnlySoftDeleted(onlySoftDeleted bool) MessageQueryInterface {
 	q.params["only_soft_deleted"] = onlySoftDeleted
 	return q
 }
 
-func (q *messageQuery) IsOrderDirectionSet() bool {
+func (q *messageQueryImplementation) IsOrderDirectionSet() bool {
 	return q.hasProperty("order_direction")
 }
 
-func (q *messageQuery) GetOrderDirection() string {
+func (q *messageQueryImplementation) GetOrderDirection() string {
 	if q.IsOrderDirectionSet() {
 		return q.params["order_direction"].(string)
 	}
@@ -423,16 +423,16 @@ func (q *messageQuery) GetOrderDirection() string {
 	return ""
 }
 
-func (q *messageQuery) SetOrderDirection(orderDirection string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetOrderDirection(orderDirection string) MessageQueryInterface {
 	q.params["order_direction"] = orderDirection
 	return q
 }
 
-func (q *messageQuery) IsOrderBySet() bool {
+func (q *messageQueryImplementation) IsOrderBySet() bool {
 	return q.hasProperty("order_by")
 }
 
-func (q *messageQuery) GetOrderBy() string {
+func (q *messageQueryImplementation) GetOrderBy() string {
 	if q.IsOrderBySet() {
 		return q.params["order_by"].(string)
 	}
@@ -440,16 +440,16 @@ func (q *messageQuery) GetOrderBy() string {
 	return ""
 }
 
-func (q *messageQuery) SetOrderBy(orderBy string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetOrderBy(orderBy string) MessageQueryInterface {
 	q.params["order_by"] = orderBy
 	return q
 }
 
-func (q *messageQuery) IsRecipientIDSet() bool {
+func (q *messageQueryImplementation) IsRecipientIDSet() bool {
 	return q.hasProperty("recipient_id")
 }
 
-func (q *messageQuery) GetRecipientID() string {
+func (q *messageQueryImplementation) GetRecipientID() string {
 	if q.IsRecipientIDSet() {
 		return q.params["recipient_id"].(string)
 	}
@@ -457,16 +457,16 @@ func (q *messageQuery) GetRecipientID() string {
 	return ""
 }
 
-func (q *messageQuery) SetRecipientID(recipientID string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetRecipientID(recipientID string) MessageQueryInterface {
 	q.params["recipient_id"] = recipientID
 	return q
 }
 
-func (q *messageQuery) IsSenderIDSet() bool {
+func (q *messageQueryImplementation) IsSenderIDSet() bool {
 	return q.hasProperty("sender_id")
 }
 
-func (q *messageQuery) GetSenderID() string {
+func (q *messageQueryImplementation) GetSenderID() string {
 	if q.IsSenderIDSet() {
 		return q.params["sender_id"].(string)
 	}
@@ -474,16 +474,16 @@ func (q *messageQuery) GetSenderID() string {
 	return ""
 }
 
-func (q *messageQuery) SetSenderID(senderID string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetSenderID(senderID string) MessageQueryInterface {
 	q.params["sender_id"] = senderID
 	return q
 }
 
-func (q *messageQuery) IsStatusSet() bool {
+func (q *messageQueryImplementation) IsStatusSet() bool {
 	return q.hasProperty("status")
 }
 
-func (q *messageQuery) GetStatus() string {
+func (q *messageQueryImplementation) GetStatus() string {
 	if q.IsStatusSet() {
 		return q.params["status"].(string)
 	}
@@ -491,16 +491,16 @@ func (q *messageQuery) GetStatus() string {
 	return ""
 }
 
-func (q *messageQuery) SetStatus(status string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetStatus(status string) MessageQueryInterface {
 	q.params["status"] = status
 	return q
 }
 
-func (q *messageQuery) IsStatusInSet() bool {
+func (q *messageQueryImplementation) IsStatusInSet() bool {
 	return q.hasProperty("status_in")
 }
 
-func (q *messageQuery) GetStatusIn() []string {
+func (q *messageQueryImplementation) GetStatusIn() []string {
 	if q.IsStatusInSet() {
 		return q.params["status_in"].([]string)
 	}
@@ -508,16 +508,16 @@ func (q *messageQuery) GetStatusIn() []string {
 	return []string{}
 }
 
-func (q *messageQuery) SetStatusIn(statusIn []string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetStatusIn(statusIn []string) MessageQueryInterface {
 	q.params["status_in"] = statusIn
 	return q
 }
 
-func (q *messageQuery) IsUpdatedAtGteSet() bool {
+func (q *messageQueryImplementation) IsUpdatedAtGteSet() bool {
 	return q.hasProperty("updated_at_gte")
 }
 
-func (q *messageQuery) GetUpdatedAtGte() string {
+func (q *messageQueryImplementation) GetUpdatedAtGte() string {
 	if q.IsUpdatedAtGteSet() {
 		return q.params["updated_at_gte"].(string)
 	}
@@ -525,16 +525,16 @@ func (q *messageQuery) GetUpdatedAtGte() string {
 	return ""
 }
 
-func (q *messageQuery) SetUpdatedAtGte(updatedAt string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetUpdatedAtGte(updatedAt string) MessageQueryInterface {
 	q.params["updated_at_gte"] = updatedAt
 	return q
 }
 
-func (q *messageQuery) IsUpdatedAtLteSet() bool {
+func (q *messageQueryImplementation) IsUpdatedAtLteSet() bool {
 	return q.hasProperty("updated_at_lte")
 }
 
-func (q *messageQuery) GetUpdatedAtLte() string {
+func (q *messageQueryImplementation) GetUpdatedAtLte() string {
 	if q.IsUpdatedAtLteSet() {
 		return q.params["updated_at_lte"].(string)
 	}
@@ -542,16 +542,16 @@ func (q *messageQuery) GetUpdatedAtLte() string {
 	return ""
 }
 
-func (q *messageQuery) SetUpdatedAtLte(updatedAt string) MessageQueryInterface {
+func (q *messageQueryImplementation) SetUpdatedAtLte(updatedAt string) MessageQueryInterface {
 	q.params["updated_at_lte"] = updatedAt
 	return q
 }
 
-func (q *messageQuery) IsWithSoftDeletedSet() bool {
+func (q *messageQueryImplementation) IsWithSoftDeletedSet() bool {
 	return q.hasProperty("with_soft_deleted")
 }
 
-func (q *messageQuery) GetWithSoftDeleted() bool {
+func (q *messageQueryImplementation) GetWithSoftDeleted() bool {
 	if q.IsWithSoftDeletedSet() {
 		return q.params["with_soft_deleted"].(bool)
 	}
@@ -559,11 +559,11 @@ func (q *messageQuery) GetWithSoftDeleted() bool {
 	return false
 }
 
-func (q *messageQuery) SetWithSoftDeleted(withSoftDeleted bool) MessageQueryInterface {
+func (q *messageQueryImplementation) SetWithSoftDeleted(withSoftDeleted bool) MessageQueryInterface {
 	q.params["with_soft_deleted"] = withSoftDeleted
 	return q
 }
 
-func (q *messageQuery) hasProperty(key string) bool {
+func (q *messageQueryImplementation) hasProperty(key string) bool {
 	return q.params[key] != nil
 }
