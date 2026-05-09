@@ -22,7 +22,7 @@ type ChatQueryInterface interface {
 	SetOnlySoftDeleted(onlySoftDeleted bool) ChatQueryInterface
 
 	// Dataset conversion methods
-	ToSelectDataset(store *store) (selectDataset *goqu.SelectDataset, columns []any, err error)
+	ToSelectDataset(store *storeImplementation) (selectDataset *goqu.SelectDataset, columns []any, err error)
 
 	// Field query methods
 

@@ -13,7 +13,7 @@ import (
 )
 
 // ChatCount counts the number of chats that match the query
-func (st *store) ChatCount(options ChatQueryInterface) (int64, error) {
+func (st *storeImplementation) ChatCount(options ChatQueryInterface) (int64, error) {
 	if st.db == nil {
 		return 0, errors.New("database is not initialized")
 	}
@@ -65,7 +65,7 @@ func (st *store) ChatCount(options ChatQueryInterface) (int64, error) {
 }
 
 // ChatCreate creates a new chat
-func (st *store) ChatCreate(chat ChatInterface) error {
+func (st *storeImplementation) ChatCreate(chat ChatInterface) error {
 	if st.db == nil {
 		return errors.New("database is not initialized")
 	}
@@ -105,7 +105,7 @@ func (st *store) ChatCreate(chat ChatInterface) error {
 }
 
 // ChatDelete permanently deletes an chat
-func (st *store) ChatDelete(chat ChatInterface) error {
+func (st *storeImplementation) ChatDelete(chat ChatInterface) error {
 	if chat == nil {
 		return errors.New("chat is nil")
 	}
@@ -114,7 +114,7 @@ func (st *store) ChatDelete(chat ChatInterface) error {
 }
 
 // ChatDeleteByID permanently deletes an chat by ID
-func (st *store) ChatDeleteByID(id string) error {
+func (st *storeImplementation) ChatDeleteByID(id string) error {
 	if st.db == nil {
 		return errors.New("database is not initialized")
 	}
@@ -146,7 +146,7 @@ func (st *store) ChatDeleteByID(id string) error {
 }
 
 // ChatExists checks if an chat exists
-func (st *store) ChatExists(id string) (bool, error) {
+func (st *storeImplementation) ChatExists(id string) (bool, error) {
 	if st.db == nil {
 		return false, errors.New("database is not initialized")
 	}
@@ -165,7 +165,7 @@ func (st *store) ChatExists(id string) (bool, error) {
 }
 
 // ChatFindByID finds an chat by ID
-func (st *store) ChatFindByID(chatID string) (ChatInterface, error) {
+func (st *storeImplementation) ChatFindByID(chatID string) (ChatInterface, error) {
 	if st.db == nil {
 		return nil, errors.New("database is not initialized")
 	}
@@ -189,7 +189,7 @@ func (st *store) ChatFindByID(chatID string) (ChatInterface, error) {
 }
 
 // ChatList lists chats based on the query
-func (st *store) ChatList(query ChatQueryInterface) ([]ChatInterface, error) {
+func (st *storeImplementation) ChatList(query ChatQueryInterface) ([]ChatInterface, error) {
 	if st.db == nil {
 		return nil, errors.New("database is not initialized")
 	}
@@ -231,7 +231,7 @@ func (st *store) ChatList(query ChatQueryInterface) ([]ChatInterface, error) {
 }
 
 // ChatSoftDelete soft deletes an chat
-func (st *store) ChatSoftDelete(chat ChatInterface) error {
+func (st *storeImplementation) ChatSoftDelete(chat ChatInterface) error {
 	if chat == nil {
 		return errors.New("chat is nil")
 	}
@@ -242,7 +242,7 @@ func (st *store) ChatSoftDelete(chat ChatInterface) error {
 }
 
 // ChatSoftDeleteByID soft deletes an chat by ID
-func (st *store) ChatSoftDeleteByID(id string) error {
+func (st *storeImplementation) ChatSoftDeleteByID(id string) error {
 	chat, err := st.ChatFindByID(id)
 
 	if err != nil {
@@ -253,7 +253,7 @@ func (st *store) ChatSoftDeleteByID(id string) error {
 }
 
 // ChatUpdate updates an chat
-func (st *store) ChatUpdate(chat ChatInterface) error {
+func (st *storeImplementation) ChatUpdate(chat ChatInterface) error {
 	if st.db == nil {
 		return errors.New("database is not initialized")
 	}
@@ -338,7 +338,7 @@ func (st *store) ChatUpdate(chat ChatInterface) error {
 // }
 
 // // applyIncidentFilters applies filters to the incident query
-// func (st *store) applyIncidentFilters(sql *goqu.SelectDataset, optionsMap map[string]interface{}) *goqu.SelectDataset {
+// func (st *storeImplementation) applyIncidentFilters(sql *goqu.SelectDataset, optionsMap map[string]interface{}) *goqu.SelectDataset {
 // 	// ID filter
 // 	if id, exists := optionsMap["id"].(string); exists && id != "" {
 // 		sql = sql.Where(goqu.C(COLUMN_ID).Eq(id))

@@ -12,7 +12,7 @@ import (
 // == TYPE
 // ============================================================================
 
-type store struct {
+type storeImplementation struct {
 	tableChat          string
 	tableMessage       string
 	db                 *sql.DB
@@ -26,14 +26,14 @@ type store struct {
 // == INTERFACE
 // ============================================================================
 
-var _ StoreInterface = (*store)(nil) // verify it extends the interface
+var _ StoreInterface = (*storeImplementation)(nil) // verify it extends the interface
 
 // ============================================================================
 // == PUBLIC METHODS
 // ============================================================================
 
 // AutoMigrate auto migrate
-func (store *store) AutoMigrate() error {
+func (store *storeImplementation) AutoMigrate() error {
 	if store.db == nil {
 		return errors.New("chatstore: database is nil")
 	}
@@ -69,12 +69,12 @@ func (store *store) AutoMigrate() error {
 }
 
 // EnableDebug - enables the debug option
-func (st *store) EnableDebug(debug bool) {
+func (st *storeImplementation) EnableDebug(debug bool) {
 	st.debugEnabled = debug
 }
 
 // GetLogger - returns the logger
-func (st *store) GetLogger() *slog.Logger {
+func (st *storeImplementation) GetLogger() *slog.Logger {
 	if st.logger == nil {
 		st.logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	}
@@ -82,6 +82,6 @@ func (st *store) GetLogger() *slog.Logger {
 }
 
 // SetLogger - sets the logger
-func (st *store) SetLogger(logger *slog.Logger) {
+func (st *storeImplementation) SetLogger(logger *slog.Logger) {
 	st.logger = logger
 }

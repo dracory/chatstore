@@ -64,7 +64,7 @@ func (q *chatQueryImplementation) Validate() error {
 	return nil
 }
 
-func (q *chatQueryImplementation) ToSelectDataset(st *store) (selectDataset *goqu.SelectDataset, columns []any, err error) {
+func (q *chatQueryImplementation) ToSelectDataset(st *storeImplementation) (selectDataset *goqu.SelectDataset, columns []any, err error) {
 	if st == nil {
 		return nil, []any{}, errors.New("store cannot be nil")
 	}

@@ -5,7 +5,7 @@ import (
 )
 
 // sqlChatTableCreate returns a SQL string for creating the chat table
-func (st *store) sqlChatTableCreate() (string, error) {
+func (st *storeImplementation) sqlChatTableCreate() (string, error) {
 	sql, err := sb.NewBuilder(sb.DatabaseDriverName(st.db)).
 		Table(st.tableChat).
 		Column(sb.Column{
@@ -59,7 +59,7 @@ func (st *store) sqlChatTableCreate() (string, error) {
 }
 
 // sqlMessageTableCreate returns a SQL string for creating the chat message table
-func (st *store) sqlMessageTableCreate() (string, error) {
+func (st *storeImplementation) sqlMessageTableCreate() (string, error) {
 	sql, err := sb.NewBuilder(sb.DatabaseDriverName(st.db)).
 		Table(st.tableMessage).
 		Column(sb.Column{

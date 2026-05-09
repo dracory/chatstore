@@ -79,5 +79,5 @@ type MessageQueryInterface interface {
 	GetOnlySoftDeleted() bool
 	SetOnlySoftDeleted(onlySoftDeleted bool) MessageQueryInterface
 
-	ToSelectDataset(store *store) (selectDataset *goqu.SelectDataset, columns []any, err error)
+	ToSelectDataset(store *storeImplementation) (selectDataset *goqu.SelectDataset, columns []any, err error)
 }

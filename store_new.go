@@ -42,7 +42,7 @@ func NewStore(opts NewStoreOptions) (StoreInterface, error) {
 		opts.Logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	}
 
-	store := &store{
+	store := &storeImplementation{
 		tableChat:          opts.TableChatName,
 		tableMessage:       opts.TableMessageName,
 		automigrateEnabled: opts.AutomigrateEnabled,

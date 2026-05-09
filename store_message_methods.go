@@ -13,7 +13,7 @@ import (
 )
 
 // MessageCount counts the number of messages that match the query
-func (st *store) MessageCount(options MessageQueryInterface) (int64, error) {
+func (st *storeImplementation) MessageCount(options MessageQueryInterface) (int64, error) {
 	if st.db == nil {
 		return 0, errors.New("database is not initialized")
 	}
@@ -65,7 +65,7 @@ func (st *store) MessageCount(options MessageQueryInterface) (int64, error) {
 }
 
 // MessageCreate creates a new message
-func (st *store) MessageCreate(message MessageInterface) error {
+func (st *storeImplementation) MessageCreate(message MessageInterface) error {
 	if st.db == nil {
 		return errors.New("database is not initialized")
 	}
@@ -105,7 +105,7 @@ func (st *store) MessageCreate(message MessageInterface) error {
 }
 
 // MessageDelete permanently deletes an message
-func (st *store) MessageDelete(message MessageInterface) error {
+func (st *storeImplementation) MessageDelete(message MessageInterface) error {
 	if message == nil {
 		return errors.New("message is nil")
 	}
@@ -114,7 +114,7 @@ func (st *store) MessageDelete(message MessageInterface) error {
 }
 
 // MessageDeleteByID permanently deletes an message by ID
-func (st *store) MessageDeleteByID(id string) error {
+func (st *storeImplementation) MessageDeleteByID(id string) error {
 	if st.db == nil {
 		return errors.New("database is not initialized")
 	}
@@ -146,7 +146,7 @@ func (st *store) MessageDeleteByID(id string) error {
 }
 
 // MessageExists checks if an message exists
-func (st *store) MessageExists(id string) (bool, error) {
+func (st *storeImplementation) MessageExists(id string) (bool, error) {
 	if st.db == nil {
 		return false, errors.New("database is not initialized")
 	}
@@ -165,7 +165,7 @@ func (st *store) MessageExists(id string) (bool, error) {
 }
 
 // MessageFindByID finds an message by ID
-func (st *store) MessageFindByID(messageID string) (MessageInterface, error) {
+func (st *storeImplementation) MessageFindByID(messageID string) (MessageInterface, error) {
 	if st.db == nil {
 		return nil, errors.New("database is not initialized")
 	}
@@ -189,7 +189,7 @@ func (st *store) MessageFindByID(messageID string) (MessageInterface, error) {
 }
 
 // MessageList lists messages based on the query
-func (st *store) MessageList(query MessageQueryInterface) ([]MessageInterface, error) {
+func (st *storeImplementation) MessageList(query MessageQueryInterface) ([]MessageInterface, error) {
 	if st.db == nil {
 		return nil, errors.New("database is not initialized")
 	}
@@ -231,7 +231,7 @@ func (st *store) MessageList(query MessageQueryInterface) ([]MessageInterface, e
 }
 
 // MessageSoftDelete soft deletes an message
-func (st *store) MessageSoftDelete(message MessageInterface) error {
+func (st *storeImplementation) MessageSoftDelete(message MessageInterface) error {
 	if message == nil {
 		return errors.New("message is nil")
 	}
@@ -242,7 +242,7 @@ func (st *store) MessageSoftDelete(message MessageInterface) error {
 }
 
 // MessageSoftDeleteByID soft deletes an message by ID
-func (st *store) MessageSoftDeleteByID(id string) error {
+func (st *storeImplementation) MessageSoftDeleteByID(id string) error {
 	message, err := st.MessageFindByID(id)
 
 	if err != nil {
@@ -253,7 +253,7 @@ func (st *store) MessageSoftDeleteByID(id string) error {
 }
 
 // MessageUpdate updates an message
-func (st *store) MessageUpdate(message MessageInterface) error {
+func (st *storeImplementation) MessageUpdate(message MessageInterface) error {
 	if st.db == nil {
 		return errors.New("database is not initialized")
 	}
@@ -338,7 +338,7 @@ func (st *store) MessageUpdate(message MessageInterface) error {
 // }
 
 // // applyIncidentFilters applies filters to the incident query
-// func (st *store) applyIncidentFilters(sql *goqu.SelectDataset, optionsMap map[string]interface{}) *goqu.SelectDataset {
+// func (st *storeImplementation) applyIncidentFilters(sql *goqu.SelectDataset, optionsMap map[string]interface{}) *goqu.SelectDataset {
 // 	// ID filter
 // 	if id, exists := optionsMap["id"].(string); exists && id != "" {
 // 		sql = sql.Where(goqu.C(COLUMN_ID).Eq(id))
