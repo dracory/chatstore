@@ -1,6 +1,7 @@
 package chatstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"log/slog"
@@ -53,7 +54,7 @@ func NewStore(opts NewStoreOptions) (StoreInterface, error) {
 	}
 
 	if store.automigrateEnabled {
-		err := store.MigrateUp()
+		err := store.MigrateUp(context.Background())
 
 		if err != nil {
 			return nil, err

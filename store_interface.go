@@ -1,6 +1,9 @@
 package chatstore
 
-import "database/sql"
+import (
+	"context"
+	"database/sql"
+)
 
 type StoreInterface interface {
 	// GetChatTableName returns the chat table name
@@ -14,9 +17,9 @@ type StoreInterface interface {
 	SetMessageTableName(tableName string)
 
 	// MigrateDown drops the chat and message tables
-	MigrateDown(tx ...*sql.Tx) error
+	MigrateDown(ctx context.Context, tx ...*sql.Tx) error
 	// MigrateUp creates the chat and message tables
-	MigrateUp(tx ...*sql.Tx) error
+	MigrateUp(ctx context.Context, tx ...*sql.Tx) error
 
 	// EnableDebug enables or disables debug mode
 	EnableDebug(enabled bool)

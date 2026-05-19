@@ -1,6 +1,7 @@
 package chatstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -33,7 +34,7 @@ var _ StoreInterface = (*storeImplementation)(nil) // verify it extends the inte
 // ============================================================================
 
 // MigrateUp creates the chat and message tables
-func (store *storeImplementation) MigrateUp(tx ...*sql.Tx) error {
+func (store *storeImplementation) MigrateUp(ctx context.Context, tx ...*sql.Tx) error {
 	var txToUse *sql.Tx
 	if len(tx) > 0 {
 		txToUse = tx[0]
@@ -65,9 +66,9 @@ func (store *storeImplementation) MigrateUp(tx ...*sql.Tx) error {
 
 		var errExec error
 		if txToUse != nil {
-			_, errExec = txToUse.Exec(sql)
+			_, errExec = txToUse.ExecContext(ctx, sql)
 		} else {
-			_, errExec = store.db.Exec(sql)
+			_, errExec = store.db.ExecContext(ctx, sql)
 		}
 
 		if errExec != nil {
@@ -79,7 +80,7 @@ func (store *storeImplementation) MigrateUp(tx ...*sql.Tx) error {
 }
 
 // MigrateDown drops the chat and message tables
-func (store *storeImplementation) MigrateDown(tx ...*sql.Tx) error {
+func (store *storeImplementation) MigrateDown(ctx context.Context, tx ...*sql.Tx) error {
 	var txToUse *sql.Tx
 	if len(tx) > 0 {
 		txToUse = tx[0]
@@ -112,9 +113,9 @@ func (store *storeImplementation) MigrateDown(tx ...*sql.Tx) error {
 
 		var errExec error
 		if txToUse != nil {
-			_, errExec = txToUse.Exec(sql)
+			_, errExec = txToUse.ExecContext(ctx, sql)
 		} else {
-			_, errExec = store.db.Exec(sql)
+			_, errExec = store.db.ExecContext(ctx, sql)
 		}
 
 		if errExec != nil {
