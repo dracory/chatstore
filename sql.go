@@ -120,3 +120,17 @@ func (st *storeImplementation) sqlMessageTableCreate() (string, error) {
 
 	return sql, nil
 }
+
+// sqlChatTableDrop returns a SQL string for dropping the chat table
+func (st *storeImplementation) sqlChatTableDrop() (string, error) {
+	return sb.NewBuilder(sb.DatabaseDriverName(st.db)).
+		Table(st.tableChat).
+		Drop()
+}
+
+// sqlMessageTableDrop returns a SQL string for dropping the message table
+func (st *storeImplementation) sqlMessageTableDrop() (string, error) {
+	return sb.NewBuilder(sb.DatabaseDriverName(st.db)).
+		Table(st.tableMessage).
+		Drop()
+}

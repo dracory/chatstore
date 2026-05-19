@@ -1,9 +1,27 @@
 package chatstore
 
+import "database/sql"
+
 type StoreInterface interface {
-	AutoMigrate() error
+	// GetChatTableName returns the chat table name
+	GetChatTableName() string
+	// SetChatTableName sets the chat table name
+	SetChatTableName(tableName string)
+
+	// GetMessageTableName returns the message table name
+	GetMessageTableName() string
+	// SetMessageTableName sets the message table name
+	SetMessageTableName(tableName string)
+
+	// MigrateDown drops the chat and message tables
+	MigrateDown(tx ...*sql.Tx) error
+	// MigrateUp creates the chat and message tables
+	MigrateUp(tx ...*sql.Tx) error
+
+	// EnableDebug enables or disables debug mode
 	EnableDebug(enabled bool)
 
+	// ChatCount returns the number of chats
 	ChatCount(options ChatQueryInterface) (int64, error)
 	ChatCreate(chat ChatInterface) error
 	ChatDelete(chat ChatInterface) error
