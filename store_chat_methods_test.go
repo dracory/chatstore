@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/dracory/chatstore"
-	"github.com/dracory/sb"
 	// _ "modernc.org/sqlite"
 )
 
@@ -434,7 +433,7 @@ func TestStore_ChatSoftDelete(t *testing.T) {
 		t.Fatal("Chat should be found when including soft deleted")
 	}
 
-	if chatFindWithDeleted[0].SoftDeletedAt() == sb.MAX_DATETIME {
+	if chatFindWithDeleted[0].SoftDeletedAt() == chatstore.MAX_DATETIME {
 		t.Fatal("Chat should be soft deleted, but SoftDeletedAt is MAX_DATETIME:", chatFindWithDeleted[0].SoftDeletedAt())
 	}
 
@@ -490,7 +489,7 @@ func TestStore_ChatSoftDeleteByID(t *testing.T) {
 		t.Fatal("Chat should be found when including soft deleted")
 	}
 
-	if chatFindWithDeleted[0].SoftDeletedAt() == sb.MAX_DATETIME {
+	if chatFindWithDeleted[0].SoftDeletedAt() == chatstore.MAX_DATETIME {
 		t.Fatal("Chat should be soft deleted, but SoftDeletedAt is MAX_DATETIME:", chatFindWithDeleted[0].SoftDeletedAt())
 	}
 

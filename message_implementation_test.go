@@ -2,8 +2,6 @@ package chatstore
 
 import (
 	"testing"
-
-	"github.com/dracory/sb"
 )
 
 func TestNewMessage(t *testing.T) {
@@ -17,8 +15,8 @@ func TestNewMessage(t *testing.T) {
 		t.Error("Expected ID to be set")
 	}
 
-	if message.Status() != CHAT_MESSAGE_STATUS_ACTIVE {
-		t.Errorf("Expected status %s, got %s", CHAT_MESSAGE_STATUS_ACTIVE, message.Status())
+	if message.Status() != MESSAGE_STATUS_ACTIVE {
+		t.Errorf("Expected status %s, got %s", MESSAGE_STATUS_ACTIVE, message.Status())
 	}
 
 	if message.ChatID() != "" {
@@ -49,8 +47,8 @@ func TestNewMessage(t *testing.T) {
 		t.Error("Expected UpdatedAt to be set")
 	}
 
-	if message.SoftDeletedAt() == "" {
-		t.Error("Expected SoftDeletedAt to be set")
+	if message.SoftDeletedAt() != MAX_DATETIME {
+		t.Errorf("Expected SoftDeletedAt to be %s, got %s", MAX_DATETIME, message.SoftDeletedAt())
 	}
 
 	metas, err := message.Metas()
@@ -69,7 +67,7 @@ func TestNewMessageFromExistingData(t *testing.T) {
 		COLUMN_CHAT_ID:         "chat-id",
 		COLUMN_SENDER_ID:       "sender-id",
 		COLUMN_RECIPIENT_ID:    "recipient-id",
-		COLUMN_STATUS:          CHAT_MESSAGE_STATUS_INACTIVE,
+		COLUMN_STATUS:          MESSAGE_STATUS_INACTIVE,
 		COLUMN_TEXT:            "Test message",
 		COLUMN_MEMO:            "Test memo",
 		COLUMN_CREATED_AT:      "2024-01-01 00:00:00",
@@ -100,8 +98,8 @@ func TestNewMessageFromExistingData(t *testing.T) {
 		t.Errorf("Expected RecipientID recipient-id, got %s", message.RecipientID())
 	}
 
-	if message.Status() != CHAT_MESSAGE_STATUS_INACTIVE {
-		t.Errorf("Expected status %s, got %s", CHAT_MESSAGE_STATUS_INACTIVE, message.Status())
+	if message.Status() != MESSAGE_STATUS_INACTIVE {
+		t.Errorf("Expected status %s, got %s", MESSAGE_STATUS_INACTIVE, message.Status())
 	}
 
 	if message.Text() != "Test message" {
@@ -172,14 +170,14 @@ func TestMessageRecipientID(t *testing.T) {
 func TestMessageStatus(t *testing.T) {
 	message := NewMessage()
 
-	if message.Status() != CHAT_MESSAGE_STATUS_ACTIVE {
-		t.Errorf("Expected initial status %s, got %s", CHAT_MESSAGE_STATUS_ACTIVE, message.Status())
+	if message.Status() != MESSAGE_STATUS_ACTIVE {
+		t.Errorf("Expected initial status %s, got %s", MESSAGE_STATUS_ACTIVE, message.Status())
 	}
 
-	message.SetStatus(CHAT_MESSAGE_STATUS_INACTIVE)
+	message.SetStatus(MESSAGE_STATUS_INACTIVE)
 
-	if message.Status() != CHAT_MESSAGE_STATUS_INACTIVE {
-		t.Errorf("Expected status %s, got %s", CHAT_MESSAGE_STATUS_INACTIVE, message.Status())
+	if message.Status() != MESSAGE_STATUS_INACTIVE {
+		t.Errorf("Expected status %s, got %s", MESSAGE_STATUS_INACTIVE, message.Status())
 	}
 }
 
@@ -274,7 +272,7 @@ func TestMessageSoftDeletedAt(t *testing.T) {
 	}
 
 	// Test setting to MAX_DATETIME (not soft deleted)
-	message.SetSoftDeletedAt(sb.MAX_DATETIME)
+	message.SetSoftDeletedAt(MAX_DATETIME)
 	if message.IsSoftDeleted() {
 		t.Error("Expected IsSoftDeleted to be false when SoftDeletedAt is MAX_DATETIME")
 	}
@@ -484,7 +482,7 @@ func TestMessageSettersReturnMessageInterface(t *testing.T) {
 		t.Error("SetRecipientID returned nil")
 	}
 
-	result = message.SetStatus(CHAT_MESSAGE_STATUS_INACTIVE)
+	result = message.SetStatus(MESSAGE_STATUS_INACTIVE)
 	if result == nil {
 		t.Error("SetStatus returned nil")
 	}
@@ -525,7 +523,7 @@ func TestMessageChaining(t *testing.T) {
 	result := message.SetChatID("chat-id").
 		SetSenderID("sender-id").
 		SetRecipientID("recipient-id").
-		SetStatus(CHAT_MESSAGE_STATUS_INACTIVE).
+		SetStatus(MESSAGE_STATUS_INACTIVE).
 		SetText("Test Text").
 		SetMemo("Test Memo").
 		SetCreatedAt("2024-01-01 00:00:00").
@@ -552,8 +550,8 @@ func TestMessageChaining(t *testing.T) {
 		t.Errorf("Chaining failed: expected RecipientID recipient-id, got %s", message.RecipientID())
 	}
 
-	if message.Status() != CHAT_MESSAGE_STATUS_INACTIVE {
-		t.Errorf("Chaining failed: expected status %s, got %s", CHAT_MESSAGE_STATUS_INACTIVE, message.Status())
+	if message.Status() != MESSAGE_STATUS_INACTIVE {
+		t.Errorf("Chaining failed: expected status %s, got %s", MESSAGE_STATUS_INACTIVE, message.Status())
 	}
 
 	if message.Text() != "Test Text" {

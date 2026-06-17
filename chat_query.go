@@ -1,26 +1,97 @@
 package chatstore
 
-import (
-	"errors"
-	"strings"
+import "errors"
 
-	"github.com/doug-martin/goqu/v9"
-	"github.com/dracory/sb"
-	"github.com/dromara/carbon/v2"
-)
+// ChatQueryInterface defines the interface for querying chats
+type ChatQueryInterface interface {
+	// Validation method
+	Validate() error
 
-// chatQuery implements the ChatQueryInterface
-type chatQueryImplementation struct {
-	params map[string]any
+	// Count related methods
+	IsCountOnlySet() bool
+	GetCountOnly() bool
+	SetCountOnly(countOnly bool) ChatQueryInterface
+
+	// Soft delete related query methods
+	IsWithSoftDeletedSet() bool
+	GetWithSoftDeleted() bool
+	SetWithSoftDeleted(withSoftDeleted bool) ChatQueryInterface
+
+	IsOnlySoftDeletedSet() bool
+	GetOnlySoftDeleted() bool
+	SetOnlySoftDeleted(onlySoftDeleted bool) ChatQueryInterface
+
+	// Field query methods
+	IsOwnerIDSet() bool
+	GetOwnerID() string
+	SetOwnerID(ownerID string) ChatQueryInterface
+
+	IsCreatedAtGteSet() bool
+	GetCreatedAtGte() string
+	SetCreatedAtGte(createdAt string) ChatQueryInterface
+
+	IsCreatedAtLteSet() bool
+	GetCreatedAtLte() string
+	SetCreatedAtLte(createdAt string) ChatQueryInterface
+
+	IsIDSet() bool
+	GetID() string
+	SetID(id string) ChatQueryInterface
+
+	IsIDInSet() bool
+	GetIDIn() []string
+	SetIDIn(ids []string) ChatQueryInterface
+
+	IsLimitSet() bool
+	GetLimit() int
+	SetLimit(limit int) ChatQueryInterface
+
+	IsOffsetSet() bool
+	GetOffset() int
+	SetOffset(offset int) ChatQueryInterface
+
+	IsOrderBySet() bool
+	GetOrderBy() string
+	SetOrderBy(orderBy string) ChatQueryInterface
+
+	IsOrderDirectionSet() bool
+	GetOrderDirection() string
+	SetOrderDirection(orderDirection string) ChatQueryInterface
+
+	IsStatusSet() bool
+	GetStatus() string
+	SetStatus(status string) ChatQueryInterface
+
+	IsStatusInSet() bool
+	GetStatusIn() []string
+	SetStatusIn(statuses []string) ChatQueryInterface
+
+	IsUpdatedAtGteSet() bool
+	GetUpdatedAtGte() string
+	SetUpdatedAtGte(updatedAt string) ChatQueryInterface
+
+	IsUpdatedAtLteSet() bool
+	GetUpdatedAtLte() string
+	SetUpdatedAtLte(updatedAt string) ChatQueryInterface
+}
+
+// ChatQuery creates a new chat query
+func ChatQuery() ChatQueryInterface {
+	return NewChatQuery()
+}
+
+// NewChatQuery creates a new chat query
+func NewChatQuery() ChatQueryInterface {
+	return &chatQueryImplementation{
+		params: make(map[string]any),
+	}
 }
 
 var _ ChatQueryInterface = (*chatQueryImplementation)(nil)
 
-// ChatQuery creates a new chat query
-func ChatQuery() ChatQueryInterface {
-	return &chatQueryImplementation{
-		params: map[string]any{},
-	}
+// chatQuery implements the ChatQueryInterface
+type chatQueryImplementation struct {
+	params map[string]any
 }
 
 // Validate validates the query parameters
@@ -64,120 +135,9 @@ func (q *chatQueryImplementation) Validate() error {
 	return nil
 }
 
-func (q *chatQueryImplementation) ToSelectDataset(st *storeImplementation) (selectDataset *goqu.SelectDataset, columns []any, err error) {
-	if st == nil {
-		return nil, []any{}, errors.New("store cannot be nil")
-	}
-
-	if err := q.Validate(); err != nil {
-		return nil, []any{}, err
-	}
-
-	sql := goqu.Dialect(st.dbDriverName).From(st.tableChat)
-
-	// Created At filter
-	if q.IsCreatedAtGteSet() {
-		sql = sql.Where(goqu.C(COLUMN_CREATED_AT).Gte(q.GetCreatedAtGte()))
-	}
-
-	if q.IsCreatedAtLteSet() {
-		sql = sql.Where(goqu.C(COLUMN_CREATED_AT).Lte(q.GetCreatedAtLte()))
-	}
-
-	// ID filter
-	if q.IsIDSet() {
-		sql = sql.Where(goqu.C(COLUMN_ID).Eq(q.GetID()))
-	}
-
-	// ID IN filter
-	if q.IsIDInSet() {
-		sql = sql.Where(goqu.C(COLUMN_ID).In(q.GetIDIn()))
-	}
-
-	// Status filter
-	if q.IsStatusSet() {
-		sql = sql.Where(goqu.C(COLUMN_STATUS).Eq(q.GetStatus()))
-	}
-
-	// Status IN filter
-	if q.IsStatusInSet() {
-		sql = sql.Where(goqu.C(COLUMN_STATUS).In(q.GetStatusIn()))
-	}
-
-	// Updated At filter
-	if q.IsUpdatedAtGteSet() {
-		sql = sql.Where(goqu.C(COLUMN_UPDATED_AT).Gte(q.GetUpdatedAtGte()))
-	}
-
-	if q.IsUpdatedAtLteSet() {
-		sql = sql.Where(goqu.C(COLUMN_UPDATED_AT).Lte(q.GetUpdatedAtLte()))
-	}
-
-	if !q.IsCountOnlySet() {
-		if q.IsLimitSet() {
-			sql = sql.Limit(uint(q.GetLimit()))
-		}
-
-		if q.IsOffsetSet() {
-			sql = sql.Offset(uint(q.GetOffset()))
-		}
-	}
-
-	sortOrder := sb.DESC
-	if q.IsOrderDirectionSet() {
-		sortOrder = q.GetOrderDirection()
-	}
-
-	if q.IsOrderBySet() {
-		if strings.EqualFold(sortOrder, sb.ASC) {
-			sql = sql.Order(goqu.I(q.GetOrderBy()).Asc())
-		} else {
-			sql = sql.Order(goqu.I(q.GetOrderBy()).Desc())
-		}
-	}
-
-	// Limit (if count only is not set)
-	if !q.IsCountOnlySet() || !q.GetCountOnly() {
-		if q.IsLimitSet() {
-			sql = sql.Limit(uint(q.GetLimit()))
-		}
-
-		if q.IsOffsetSet() {
-			sql = sql.Offset(uint(q.GetOffset()))
-		}
-	}
-
-	// Sort order
-	if q.IsOrderBySet() {
-		sortOrder := q.GetOrderDirection()
-
-		if strings.EqualFold(sortOrder, sb.ASC) {
-			sql = sql.Order(goqu.I(q.GetOrderBy()).Asc())
-		} else {
-			sql = sql.Order(goqu.I(q.GetOrderBy()).Desc())
-		}
-	}
-
-	// Soft delete filters
-
-	// Only soft deleted
-	if q.IsOnlySoftDeletedSet() && q.GetOnlySoftDeleted() {
-		sql = sql.Where(goqu.C(COLUMN_SOFT_DELETED_AT).Lte(carbon.Now(carbon.UTC).ToDateTimeString()))
-		return sql, []any{}, nil
-	}
-
-	// Include soft deleted
-	if q.IsWithSoftDeletedSet() && q.GetWithSoftDeleted() {
-		return sql, []any{}, nil
-	}
-
-	// Exclude soft deleted, not in the past (default)
-	softDeleted := goqu.C(COLUMN_SOFT_DELETED_AT).
-		Gt(carbon.Now(carbon.UTC).ToDateTimeString())
-
-	sql = sql.Where(softDeleted)
-
-	return sql, []any{}, nil
+func (q *chatQueryImplementation) hasProperty(key string) bool {
+	_, ok := q.params[key]
+	return ok
 }
 
 // ============================================================================
@@ -192,7 +152,6 @@ func (q *chatQueryImplementation) GetOwnerID() string {
 	if q.IsOwnerIDSet() {
 		return q.params["owner_id"].(string)
 	}
-
 	return ""
 }
 
@@ -209,7 +168,6 @@ func (q *chatQueryImplementation) GetCountOnly() bool {
 	if q.IsCountOnlySet() {
 		return q.params["count_only"].(bool)
 	}
-
 	return false
 }
 
@@ -226,7 +184,6 @@ func (q *chatQueryImplementation) GetCreatedAtGte() string {
 	if q.IsCreatedAtGteSet() {
 		return q.params["created_at_gte"].(string)
 	}
-
 	return ""
 }
 
@@ -243,7 +200,6 @@ func (q *chatQueryImplementation) GetCreatedAtLte() string {
 	if q.IsCreatedAtLteSet() {
 		return q.params["created_at_lte"].(string)
 	}
-
 	return ""
 }
 
@@ -255,11 +211,11 @@ func (q *chatQueryImplementation) SetCreatedAtLte(createdAtLte string) ChatQuery
 func (q *chatQueryImplementation) IsIDSet() bool {
 	return q.hasProperty("id")
 }
+
 func (q *chatQueryImplementation) GetID() string {
 	if q.IsIDSet() {
 		return q.params["id"].(string)
 	}
-
 	return ""
 }
 
@@ -276,7 +232,6 @@ func (q *chatQueryImplementation) GetIDIn() []string {
 	if q.IsIDInSet() {
 		return q.params["id_in"].([]string)
 	}
-
 	return []string{}
 }
 
@@ -293,7 +248,6 @@ func (q *chatQueryImplementation) GetLimit() int {
 	if q.IsLimitSet() {
 		return q.params["limit"].(int)
 	}
-
 	return 0
 }
 
@@ -310,7 +264,6 @@ func (q *chatQueryImplementation) GetOffset() int {
 	if q.IsOffsetSet() {
 		return q.params["offset"].(int)
 	}
-
 	return 0
 }
 
@@ -327,7 +280,6 @@ func (q *chatQueryImplementation) GetOnlySoftDeleted() bool {
 	if q.IsOnlySoftDeletedSet() {
 		return q.params["only_soft_deleted"].(bool)
 	}
-
 	return false
 }
 
@@ -336,20 +288,19 @@ func (q *chatQueryImplementation) SetOnlySoftDeleted(onlySoftDeleted bool) ChatQ
 	return q
 }
 
-func (q *chatQueryImplementation) IsOrderDirectionSet() bool {
-	return q.hasProperty("order_direction")
+func (q *chatQueryImplementation) IsWithSoftDeletedSet() bool {
+	return q.hasProperty("with_soft_deleted")
 }
 
-func (q *chatQueryImplementation) GetOrderDirection() string {
-	if q.IsOrderDirectionSet() {
-		return q.params["order_direction"].(string)
+func (q *chatQueryImplementation) GetWithSoftDeleted() bool {
+	if q.IsWithSoftDeletedSet() {
+		return q.params["with_soft_deleted"].(bool)
 	}
-
-	return ""
+	return false
 }
 
-func (q *chatQueryImplementation) SetOrderDirection(orderDirection string) ChatQueryInterface {
-	q.params["order_direction"] = orderDirection
+func (q *chatQueryImplementation) SetWithSoftDeleted(withSoftDeleted bool) ChatQueryInterface {
+	q.params["with_soft_deleted"] = withSoftDeleted
 	return q
 }
 
@@ -361,12 +312,27 @@ func (q *chatQueryImplementation) GetOrderBy() string {
 	if q.IsOrderBySet() {
 		return q.params["order_by"].(string)
 	}
-
 	return ""
 }
 
 func (q *chatQueryImplementation) SetOrderBy(orderBy string) ChatQueryInterface {
 	q.params["order_by"] = orderBy
+	return q
+}
+
+func (q *chatQueryImplementation) IsOrderDirectionSet() bool {
+	return q.hasProperty("order_direction")
+}
+
+func (q *chatQueryImplementation) GetOrderDirection() string {
+	if q.IsOrderDirectionSet() {
+		return q.params["order_direction"].(string)
+	}
+	return ""
+}
+
+func (q *chatQueryImplementation) SetOrderDirection(orderDirection string) ChatQueryInterface {
+	q.params["order_direction"] = orderDirection
 	return q
 }
 
@@ -378,7 +344,6 @@ func (q *chatQueryImplementation) GetStatus() string {
 	if q.IsStatusSet() {
 		return q.params["status"].(string)
 	}
-
 	return ""
 }
 
@@ -395,12 +360,11 @@ func (q *chatQueryImplementation) GetStatusIn() []string {
 	if q.IsStatusInSet() {
 		return q.params["status_in"].([]string)
 	}
-
 	return []string{}
 }
 
-func (q *chatQueryImplementation) SetStatusIn(statusIn []string) ChatQueryInterface {
-	q.params["status_in"] = statusIn
+func (q *chatQueryImplementation) SetStatusIn(statuses []string) ChatQueryInterface {
+	q.params["status_in"] = statuses
 	return q
 }
 
@@ -412,7 +376,6 @@ func (q *chatQueryImplementation) GetUpdatedAtGte() string {
 	if q.IsUpdatedAtGteSet() {
 		return q.params["updated_at_gte"].(string)
 	}
-
 	return ""
 }
 
@@ -429,32 +392,10 @@ func (q *chatQueryImplementation) GetUpdatedAtLte() string {
 	if q.IsUpdatedAtLteSet() {
 		return q.params["updated_at_lte"].(string)
 	}
-
 	return ""
 }
 
 func (q *chatQueryImplementation) SetUpdatedAtLte(updatedAt string) ChatQueryInterface {
 	q.params["updated_at_lte"] = updatedAt
 	return q
-}
-
-func (q *chatQueryImplementation) IsWithSoftDeletedSet() bool {
-	return q.hasProperty("with_soft_deleted")
-}
-
-func (q *chatQueryImplementation) GetWithSoftDeleted() bool {
-	if q.IsWithSoftDeletedSet() {
-		return q.params["with_soft_deleted"].(bool)
-	}
-
-	return false
-}
-
-func (q *chatQueryImplementation) SetWithSoftDeleted(withSoftDeleted bool) ChatQueryInterface {
-	q.params["with_soft_deleted"] = withSoftDeleted
-	return q
-}
-
-func (q *chatQueryImplementation) hasProperty(key string) bool {
-	return q.params[key] != nil
 }

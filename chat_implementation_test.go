@@ -35,8 +35,8 @@ func TestNewChat(t *testing.T) {
 		t.Error("Expected UpdatedAt to be set")
 	}
 
-	if chat.SoftDeletedAt() == "" {
-		t.Error("Expected SoftDeletedAt to be set")
+	if chat.SoftDeletedAt() != MAX_DATETIME {
+		t.Errorf("Expected SoftDeletedAt to be %s, got %s", MAX_DATETIME, chat.SoftDeletedAt())
 	}
 
 	metas, err := chat.Metas()
@@ -202,9 +202,9 @@ func TestChatUpdatedAt(t *testing.T) {
 func TestChatSoftDeletedAt(t *testing.T) {
 	chat := NewChat()
 
-	// Initially has MAX_DATE set, so IsSoftDeleted returns true
-	if !chat.IsSoftDeleted() {
-		t.Error("Expected IsSoftDeleted to be true initially (has MAX_DATE)")
+	// Initially has MAX_DATETIME set, so IsSoftDeleted returns false
+	if chat.IsSoftDeleted() {
+		t.Error("Expected IsSoftDeleted to be false initially (has MAX_DATETIME)")
 	}
 
 	testTime := "2024-03-15 10:30:00"
@@ -227,10 +227,10 @@ func TestChatSoftDeletedAt(t *testing.T) {
 		t.Errorf("Expected Carbon time %s, got %s", testTime, carbonTime.Format("Y-m-d H:i:s"))
 	}
 
-	// Test setting to empty string (not soft deleted)
-	chat.SetSoftDeletedAt("")
+	// Test setting to MAX_DATETIME (not soft deleted)
+	chat.SetSoftDeletedAt(MAX_DATETIME)
 	if chat.IsSoftDeleted() {
-		t.Error("Expected IsSoftDeleted to be false when SoftDeletedAt is empty")
+		t.Error("Expected IsSoftDeleted to be false when SoftDeletedAt is MAX_DATETIME")
 	}
 }
 

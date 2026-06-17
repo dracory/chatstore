@@ -7,21 +7,20 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/dracory/sb"
+	"github.com/dracory/neat"
 )
 
-// NewStoreOptions define the options for creating a new block store
+// NewStoreOptions defines the options for creating a new chat store.
 type NewStoreOptions struct {
 	TableChatName      string
 	TableMessageName   string
 	DB                 *sql.DB
-	DbDriverName       string
 	AutomigrateEnabled bool
 	DebugEnabled       bool
 	Logger             *slog.Logger
 }
 
-// NewStore creates a new block store
+// NewStore creates a new chat store.
 func NewStore(opts NewStoreOptions) (StoreInterface, error) {
 	if opts.TableChatName == "" {
 		return nil, errors.New("chat store: TableChatName is required")
@@ -32,11 +31,12 @@ func NewStore(opts NewStoreOptions) (StoreInterface, error) {
 	}
 
 	if opts.DB == nil {
-		return nil, errors.New("shop store: DB is required")
+		return nil, errors.New("chat store: DB is required")
 	}
 
-	if opts.DbDriverName == "" {
-		opts.DbDriverName = sb.DatabaseDriverName(opts.DB)
+	neatDB, err := neat.NewFromSQLDB(opts.DB)
+	if err != nil {
+		return nil, err
 	}
 
 	if opts.Logger == nil {
@@ -46,17 +46,14 @@ func NewStore(opts NewStoreOptions) (StoreInterface, error) {
 	store := &storeImplementation{
 		tableChat:          opts.TableChatName,
 		tableMessage:       opts.TableMessageName,
+		db:                 neatDB,
 		automigrateEnabled: opts.AutomigrateEnabled,
-		db:                 opts.DB,
-		dbDriverName:       opts.DbDriverName,
 		debugEnabled:       opts.DebugEnabled,
 		logger:             opts.Logger,
 	}
 
 	if store.automigrateEnabled {
-		err := store.MigrateUp(context.Background())
-
-		if err != nil {
+		if err := store.MigrateUp(context.Background()); err != nil {
 			return nil, err
 		}
 	}
