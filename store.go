@@ -570,7 +570,8 @@ func (st *storeImplementation) MessageUpdate(message MessageInterface) error {
 
 // buildChatQuery builds a neat query from the chat query interface.
 func (st *storeImplementation) buildChatQuery(query ChatQueryInterface) contractsorm.Query {
-	q := st.db.Query()
+	// Use Model() to enable neat's automatic soft delete handling via SoftDeletesMaxDate
+	q := st.db.Query().Model(&chatImplementation{})
 
 	if query == nil {
 		return q
@@ -625,14 +626,11 @@ func (st *storeImplementation) buildChatQuery(query ChatQueryInterface) contract
 		q = q.OrderBy(query.GetOrderBy() + " " + direction)
 	}
 
-	// Handle soft delete filtering
+	// Handle soft delete filtering via neat's automatic handling (SoftDeletesMaxDate)
 	if query.IsWithSoftDeletedSet() && query.GetWithSoftDeleted() {
 		q = q.WithSoftDeleted()
 	} else if query.IsOnlySoftDeletedSet() && query.GetOnlySoftDeleted() {
 		q = q.OnlySoftDeleted()
-	} else {
-		// By default, filter out soft-deleted records
-		q = q.Where(COLUMN_SOFT_DELETED_AT+" = ?", carbon.Parse(MAX_DATETIME, carbon.UTC).StdTime())
 	}
 
 	return q
@@ -640,7 +638,8 @@ func (st *storeImplementation) buildChatQuery(query ChatQueryInterface) contract
 
 // buildMessageQuery builds a neat query from the message query interface.
 func (st *storeImplementation) buildMessageQuery(query MessageQueryInterface) contractsorm.Query {
-	q := st.db.Query()
+	// Use Model() to enable neat's automatic soft delete handling via SoftDeletesMaxDate
+	q := st.db.Query().Model(&messageImplementation{})
 
 	if query == nil {
 		return q
@@ -703,14 +702,11 @@ func (st *storeImplementation) buildMessageQuery(query MessageQueryInterface) co
 		q = q.OrderBy(query.GetOrderBy() + " " + direction)
 	}
 
-	// Handle soft delete filtering
+	// Handle soft delete filtering via neat's automatic handling (SoftDeletesMaxDate)
 	if query.IsWithSoftDeletedSet() && query.GetWithSoftDeleted() {
 		q = q.WithSoftDeleted()
 	} else if query.IsOnlySoftDeletedSet() && query.GetOnlySoftDeleted() {
 		q = q.OnlySoftDeleted()
-	} else {
-		// By default, filter out soft-deleted records
-		q = q.Where(COLUMN_SOFT_DELETED_AT+" = ?", carbon.Parse(MAX_DATETIME, carbon.UTC).StdTime())
 	}
 
 	return q
