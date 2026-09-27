@@ -623,7 +623,7 @@ func (st *storeImplementation) buildChatQuery(query ChatQueryInterface) contract
 
 	if query.IsOrderBySet() && query.GetOrderBy() != "" {
 		direction := lo.CoalesceOrEmpty(query.GetOrderDirection(), "DESC")
-		q = q.OrderBy(query.GetOrderBy() + " " + direction)
+		q = q.OrderBy(query.GetOrderBy(), direction)
 	}
 
 	// Handle soft delete filtering via neat's automatic handling (SoftDeletesMaxDate)
@@ -699,7 +699,7 @@ func (st *storeImplementation) buildMessageQuery(query MessageQueryInterface) co
 
 	if query.IsOrderBySet() && query.GetOrderBy() != "" {
 		direction := lo.CoalesceOrEmpty(query.GetOrderDirection(), "DESC")
-		q = q.OrderBy(query.GetOrderBy() + " " + direction)
+		q = q.OrderBy(query.GetOrderBy(), direction)
 	}
 
 	// Handle soft delete filtering via neat's automatic handling (SoftDeletesMaxDate)
