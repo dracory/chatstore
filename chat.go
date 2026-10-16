@@ -3,10 +3,10 @@ package chatstore
 import (
 	"encoding/json"
 	"maps"
+	"uuid"
 
 	"github.com/dracory/neat/database/orm"
 	"github.com/dracory/neat/database/soft_delete"
-	neatuid "github.com/dracory/neat/support/uid"
 	"github.com/dromara/carbon/v2"
 )
 
@@ -57,7 +57,7 @@ var _ ChatInterface = (*chatImplementation)(nil)
 
 // chatImplementation is the private implementation of ChatInterface.
 type chatImplementation struct {
-	orm.ShortID
+	orm.StringID
 
 	StatusField    string `db:"status"`
 	OwnerIDField   string `db:"owner_id"`
@@ -74,7 +74,7 @@ type chatImplementation struct {
 // NewChat creates a new chat.
 func NewChat() ChatInterface {
 	o := &chatImplementation{}
-	o.SetID(neatuid.GenerateShortID())
+	o.SetID(uuid.NewV7().String())
 	o.SetStatus(CHAT_STATUS_ACTIVE)
 	o.SetTitle("")
 	o.SetMemo("")
@@ -112,12 +112,12 @@ func NewChatFromExistingData(data map[string]string) ChatInterface {
 
 // ID returns the id of the chat.
 func (o *chatImplementation) ID() string {
-	return o.ShortID.ID
+	return o.StringID.ID
 }
 
 // SetID sets the id of the chat.
 func (o *chatImplementation) SetID(id string) ChatInterface {
-	o.ShortID.ID = id
+	o.StringID.ID = id
 	return o
 }
 

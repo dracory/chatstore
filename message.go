@@ -3,10 +3,10 @@ package chatstore
 import (
 	"encoding/json"
 	"maps"
+	"uuid"
 
 	"github.com/dracory/neat/database/orm"
 	"github.com/dracory/neat/database/soft_delete"
-	neatuid "github.com/dracory/neat/support/uid"
 	"github.com/dromara/carbon/v2"
 )
 
@@ -63,7 +63,7 @@ var _ MessageInterface = (*messageImplementation)(nil)
 
 // messageImplementation is the private implementation of MessageInterface.
 type messageImplementation struct {
-	orm.ShortID
+	orm.StringID
 
 	ChatIDField      string `db:"chat_id"`
 	StatusField      string `db:"status"`
@@ -82,7 +82,7 @@ type messageImplementation struct {
 // NewMessage creates a new message.
 func NewMessage() MessageInterface {
 	o := &messageImplementation{}
-	o.SetID(neatuid.GenerateShortID())
+	o.SetID(uuid.NewV7().String())
 	o.SetStatus(MESSAGE_STATUS_ACTIVE)
 	o.SetMemo("")
 	o.SetCreatedAt(carbon.Now(carbon.UTC).ToDateTimeString(carbon.UTC))
@@ -121,12 +121,12 @@ func NewMessageFromExistingData(data map[string]string) MessageInterface {
 
 // ID returns the id of the message.
 func (o *messageImplementation) ID() string {
-	return o.ShortID.ID
+	return o.StringID.ID
 }
 
 // SetID sets the id of the message.
 func (o *messageImplementation) SetID(id string) MessageInterface {
-	o.ShortID.ID = id
+	o.StringID.ID = id
 	return o
 }
 
